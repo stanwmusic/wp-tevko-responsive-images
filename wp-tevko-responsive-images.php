@@ -75,6 +75,7 @@ function tevkori_get_src_sizes( $imageId ) {
 	$arr = array();
 	$origSrc = wp_get_attachment_image_src( $imageId, 'full' )[0];
 	$origWidth = wp_get_attachment_image_src( $imageId, 'full' )[1];
+	$sizeAlreadyCalled = false;
 	$mappings = array(
         'tevkoriSmall-img',
         'tevkoriMedium-img',
@@ -84,9 +85,16 @@ function tevkori_get_src_sizes( $imageId ) {
     );
     if ( $origWidth > 320 ) {
 		foreach ( $mappings as $type ) {
-			//right now there's now way (AFAIK) to check if a specific image size for an image exists, so this code will produce duplicate srcsets if a request is made for an image size that's greater than the width of the origional image
+			//we need to prevent duplicate srcsets if an image is smaller than the size we're asking
 			$image_src = wp_get_attachment_image_src( $imageId, $type );
-			$arr[] = $image_src[0] . ' ' . $image_src[1] . 'w';
+			if ($image_src[3] && !$sizeAlreadyCalled) {
+				$arr[] = $image_src[0] . ' ' . $image_src[1] . 'w';
+			} elseif (!$image_src[3] && !$sizeAlreadyCalled) {
+				$arr[] = $image_src[0] . ' ' . $image_src[1] . 'w';
+				$sizeAlreadyCalled = true;
+			} elseif (!$image_src[3] && $sizeAlreadyCalled) {
+				break;
+			}
 		}
 		return '<img src="' . $origSrc . '" srcset="' . implode( ', ', $arr ) . '" alt="' . tevkori_get_img_alt( $imageId ) . '" />';
 	} else {
