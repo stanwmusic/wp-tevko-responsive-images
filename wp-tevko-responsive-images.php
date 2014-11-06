@@ -74,7 +74,7 @@ function tevkori_get_src_sizes( $imageId ) {
 		$image_src = wp_get_attachment_image_src( $imageId, $type );
 		$arr[] = $image_src[0] . ' ' . $image_src[1] . 'w';
 	}
-	return 'src="' . $origSrc . '" srcset="' . implode( ',', array_reverse ( $arr ) ) . '"';
+	return 'src="' . $origSrc . '" srcset="' . implode( ', ', $arr ) . '"';
 }
 
 //extend image tag to include sizes attribute
