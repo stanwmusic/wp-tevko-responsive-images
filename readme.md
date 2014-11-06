@@ -1,28 +1,25 @@
-This plugin tells WordPress to create three additional sizes for images you upload. Then it outputs special HTML (via a shortcode) that works with the Picturefill library to achieve responsive images in content.
+WP-tevko-responsive-images
+---
 
-### Usage
+Bringing automatic default responsive images to wordpress
 
-	Shortcode -
-    [responsive imageid="12" size1="0" size2="500" size3="1000"]
+##Version
 
-    PHP (use in template files) -
+2.0.0
 
-    <?php
-		$imageid = 'your image id';
-		$mappings = array(
-            0 => 'small-img', // zero maps to default
-            250 => 'large-img',
-            1000 => 'full-width'
-        );
-	?>
-	<picture>
-        <!--[if IE 9]><video style="display: none;"><![endif]-->
-        <?php echo tevkori_get_picture_srcs($imageid, $mappings) ?>
-        <!--[if IE 9]></video><![endif]-->
-        <img srcset="<?php wp_get_attachment_image_src( $imageid )[0] ?>" alt="<?php tevkori_get_img_alt( $imageid ) ?>">
-        <noscript> <?php echo wp_get_attachment_image( $imageid, $mappings[0] ) ?> </noscript>
-    </picture>
+##Changelog
 
-### Tutorial
+ - Uses [Picturefill 2.2.2 (Beta)](http://scottjehl.github.io/picturefill/)
+ - Scripts are async
+ - Thumbnail support is added if not previously supported
+ - Image sizes adjusted
+ - If alt tag is left blank, image title is used
+ - Most importantly, the srcset syntax is being used
+ - The structure of the plugin is significantly different. The plugin now works by extending the default wordpress image tag functionality to include the srcset sizes syntax. In doing this, the width and height attributes are removed from the origional wordpress image tag
 
-Here: http://css-tricks.com/hassle-free-responsive-images-for-wordpress
+
+ ##Hardcoding in template files
+
+  To use this plugin in a template file, use the following syntax:
+
+ ``<img <?php echo tevkori_get_src_sizes( TheIdOfYourImage ); ?> />``

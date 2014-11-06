@@ -1,78 +1,88 @@
 <?php
+defined('ABSPATH') or die("No script kiddies please!");
+/**
+ * @link              https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images
+ * @since             2.0.0
+ * @package           http://css-tricks.com/hassle-free-responsive-images-for-wordpress/
+ *
+ * @wordpress-plugin
+ * Plugin Name:       WP Tevko Responsive Images
+ * Plugin URI:        http://css-tricks.com/hassle-free-responsive-images-for-wordpress/
+ * Description:       Bringing automatic default responsive images to wordpress
+ * Version:           2.0.0
+ * Author:            Tim Evko
+ * Author URI:        http://timevko.com/
+ * License:           GPL-2.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ */
 
-/*
-Plugin Name: WP Tevko Responsive Images
-Plugin URI: http://timevko.com
-Description: Fully responsive image solution using picturefill and the ID of your image.
-Version: 1.0.1
-Author: Tim Evko
-Author URI: http://timevko.com
-License: MIT
-*/
 
 
 // First we queue the polyfill
 function tevkori_get_picturefill() {
-    wp_enqueue_script( 'picturefill', plugins_url( '/js/picturefill.js', __FILE__ ) );
+	echo
+	'<!-- Begin picturefill -->
+	<script src="' . plugins_url( 'js/picturefill.js', __FILE__ ) . '" async></script>
+	<!-- End picturefill -->';
 }
-add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
+add_action( 'wp_footer', 'tevkori_get_picturefill' );
 
+// ensure theme support for thumbnails exists, if not add it
+function tevkori_add_thumbnail_support() {
+	$supported = get_theme_support( 'post-thumbnails' );
+	if( $supported == false )
+		add_theme_support( 'post-thumbnails');
+}
 
-// Add support for our desired image sizes - if you add to these, you may have to adjust your shortcode function
-// TODO: Add UI for adjusting?
+add_action( 'after_setup_theme', 'tevkori_add_thumbnail_support' );
+
+// Add support for our desired image sizes
 function tevkori_add_image_sizes() {
-    add_image_size( 'large-img', 1000, 702 );
-    add_image_size( 'medium-img', 700, 372 );
-    add_image_size( 'small-img', 300, 200 );
+	//if the image size is less than 320, what do?
+	add_image_size( 'super-img', 1280 );
+	add_image_size( 'large-img', 960 );
+	add_image_size( 'medium-img', 640 );
+	add_image_size( 'small-img', 320 );
 }
 add_action( 'plugins_loaded', 'tevkori_add_image_sizes' );
 
-// alt tags will now be automatically included
-function tevkori_get_img_alt( $image ) {
-    $img_alt = trim( strip_tags( get_post_meta( $image, '_wp_attachment_image_alt', true ) ) );
-    return $img_alt;
+//get the image alt tag
+
+function tevkori_get_img_alt( $id ) {
+	$alt = wp_prepare_attachment_for_js( $id )['alt'];
+	$title = wp_prepare_attachment_for_js( $id )['title'];
+	if ($alt) {
+		return $alt;
+	} else {
+		return $title;
+	}
 }
 
-function tevkori_get_picture_srcs( $image, $mappings ) {
-    $arr = array();
-    foreach ( $mappings as $size => $type ) {
-        $image_src = wp_get_attachment_image_src( $image, $type );
-        $arr[] = '<source srcset="'. $image_src[0] . '" media="(min-width: '. $size .'px)">';
-    }
-    return implode( array_reverse ( $arr ) );
-}
+//return an image with src and sizes attributes
 
-function tevkori_responsive_shortcode( $atts ) {
-    extract( shortcode_atts( array(
-        'imageid'    => 1,
-        // You can add more sizes for your shortcodes here
-        'size1' => 0,
-        'size2' => 600,
-        'size3' => 1000,
-    ), $atts ) );
-
-    $mappings = array(
-        $size1 => 'small-img',
-        $size2 => 'medium-img',
-        $size3 => 'large-img'
+function tevkori_get_src_sizes( $imageId ) {
+	$arr = array();
+	$origSrc = wp_get_attachment_image_src( $imageId, 'full' )[0];
+	$mappings = array(
+        'small-img',
+        'medium-img',
+        'large-img',
+        'super-img'
     );
-
-   return
-        '<picture>
-            <!--[if IE 9]><video style="display: none;"><![endif]-->'
-            . tevkori_get_picture_srcs( $imageid, $mappings ) .
-            '<!--[if IE 9]></video><![endif]-->
-            <img srcset="' . wp_get_attachment_image_src( $imageid[0] ) . '" alt="' . tevkori_get_img_alt( $imageid ) . '">
-            <noscript>' . wp_get_attachment_image( $imageid, $mappings[0] ) . ' </noscript>
-        </picture>';
+	foreach ( $mappings as $type ) {
+		//right now there's now way (AFAIK) to check if a specific image size for an image exists, so this code will produce duplicate srcsets if a request is made for an image size that's greater than the width of the origional image
+		$image_src = wp_get_attachment_image_src( $imageId, $type );
+		$arr[] = $image_src[0] . ' ' . $image_src[1] . 'w';
+	}
+	return 'src="' . $origSrc . '" srcset="' . implode( ',', array_reverse ( $arr ) ) . '"';
 }
-// TODO: It this the best name? responsive_img? picture?
-add_shortcode( 'responsive', 'tevkori_responsive_shortcode' );
 
-// Alter Media Uploader output to output shortcode instead
-// TODO: Make optional?
-// TODO: Make this know what sizes are chosen, rather than hardcoded
-function tevkori_responsive_insert_image( $html, $id, $caption, $title, $align, $url ) {
-    return "[responsive imageid='$id' size1='0' size2='600' size3='1000']";
+//extend image tag to include sizes attribute
+
+function tevkori_extend_image_tag( $html, $id ) {
+	$html = '<img ' . tevkori_get_src_sizes( $id ) . ' alt="' . tevkori_get_img_alt( $id ) . '" />';
+	return $html;
 }
-add_filter( 'image_send_to_editor', 'tevkori_responsive_insert_image', 10, 9 );
+
+add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 10, 7 );
+add_filter('get_image_tag', 'tevkori_extend_image_tag', 0, 4);
