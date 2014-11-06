@@ -101,5 +101,4 @@ function tevkori_extend_image_tag( $html, $id ) {
 	return $html;
 }
 
-add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 2 ); // curently causes 2 bugs - 1.) w attributes are messed up 2.) tinyMCE strips out srcset. Pull request pending - https://github.com/tinymce/tinymce/pull/429/files
-add_filter('get_image_tag', 'tevkori_extend_image_tag', 0, 2);
+add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 2 ); // weird bug happening here where w attributes get messed up
