@@ -20,6 +20,7 @@ defined('ABSPATH') or die("No script kiddies please!");
 
 // First we queue the polyfill
 function tevkori_get_picturefill() {
+	//we're only doing this because we need to add the async attribute
 	echo
 	'<!-- Begin picturefill -->
 	<script src="' . plugins_url( 'js/picturefill.js', __FILE__ ) . '" async></script>
