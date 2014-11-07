@@ -30,8 +30,9 @@ add_action( 'wp_footer', 'tevkori_get_picturefill' );
 // ensure theme support for thumbnails exists, if not add it
 function tevkori_add_thumbnail_support() {
 	$supported = get_theme_support( 'post-thumbnails' );
-	if( $supported == false )
+	if( $supported == false ) {
 		add_theme_support( 'post-thumbnails');
+	}
 }
 
 add_action( 'after_setup_theme', 'tevkori_add_thumbnail_support' );
