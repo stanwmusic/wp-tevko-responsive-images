@@ -20,23 +20,9 @@ defined('ABSPATH') or die("No script kiddies please!");
 
 // First we queue the polyfill
 function tevkori_get_picturefill() {
-	//we're only doing this because we need to add the async attribute
-	echo
-	'<!-- Begin picturefill -->
-	<script src="' . plugins_url( 'js/picturefill.js', __FILE__ ) . '" async></script>
-	<!-- End picturefill -->';
+	wp_enqueue_script( 'picturefill', plugins_url( 'js/picturefill.js', __FILE__ ), array(), '2.2.0', true );
 }
-add_action( 'wp_footer', 'tevkori_get_picturefill' );
-
-// ensure theme support for thumbnails exists, if not add it
-function tevkori_add_thumbnail_support() {
-	$supported = get_theme_support( 'post-thumbnails' );
-	if( $supported == false ) {
-		add_theme_support( 'post-thumbnails');
-	}
-}
-
-add_action( 'after_setup_theme', 'tevkori_add_thumbnail_support' );
+add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
 
 // Add support for our desired image sizes
 function tevkori_add_image_sizes() {
@@ -48,19 +34,7 @@ function tevkori_add_image_sizes() {
 
 add_action( 'plugins_loaded', 'tevkori_add_image_sizes' );
 
-//get the image alt tag
-
-function tevkori_get_img_alt( $id ) {
-	$alt = wp_prepare_attachment_for_js( $id )['alt'];
-	$title = wp_prepare_attachment_for_js( $id )['title'];
-	if ($alt) {
-		return $alt;
-	} else {
-		return $title;
-	}
-}
-
-//stop tinyMCE from altering srcsizes atribute a fix for this is pending on github - https://github.com/tinymce/tinymce/pull/429/files
+//stop tinyMCE from altering srcsizes atribute - WILL NOT NEED AFTER WP 4.1
 
 function override_mce_options($initArray) {
 	$opts = '*[*]';
@@ -98,16 +72,17 @@ function tevkori_get_src_sizes( $imageId ) {
 				break;
 			}
 		}
-		return '<img src="' . $origSrc . '" srcset="' . implode( ', ', $arr ) . '" alt="' . tevkori_get_img_alt( $imageId ) . '" />';
+		return 'srcset="' . implode( ', ', $arr ) . '"';
 	} else {
-		return '<img src="' . $origSrc . '" alt="' . tevkori_get_img_alt( $imageId ) . '" />';
+		return;
 	}
 }
 
 //extend image tag to include sizes attribute
 
 function tevkori_extend_image_tag( $html, $id ) {
-	$html = tevkori_get_src_sizes( $id );
+	$srcset = tevkori_get_src_sizes( $id );
+	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1' . ' ' . $srcset, $html );
 	return $html;
 }
 

@@ -9,7 +9,7 @@ This plugin works by including 4 additional image sizes for each image upload. W
 
  You can output a responsive image anywhere you'd like by using the following syntax:
 
-``<?php echo tevkori_get_src_sizes( TheIdOfYourImage ); ?>``
+``<img src="pathToImage" <?php echo tevkori_get_src_sizes( TheIdOfYourImage ); ?> />``
 
 ##Version
 
@@ -19,7 +19,6 @@ This plugin works by including 4 additional image sizes for each image upload. W
 
  - Uses [Picturefill 2.2.2 (Beta)](http://scottjehl.github.io/picturefill/)
  - Scripts are async
- - Thumbnail support is added if not previously supported
  - Image sizes adjusted
  - If alt tag is left blank, image title is used
  - Most importantly, the srcset syntax is being used
