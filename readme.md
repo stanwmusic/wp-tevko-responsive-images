@@ -21,5 +21,5 @@ This plugin works by including 4 additional image sizes for each image upload. W
  - Scripts are output to footer
  - Image sizes adjusted
  - Most importantly, the srcset syntax is being used
- - The structure of the plugin is significantly different. The plugin now works by extending the default wordpress image tag functionality to include the srcset sizes syntax. In doing this, the width and height attributes are removed from the origional wordpress image tag. The title is also removed
+ - The structure of the plugin is significantly different. The plugin now works by extending the default wordpress image tag functionality to include the srcset sizes syntax.
  - another thing to note, tinyMCE doesn't support the srcsizes attribute. To get around that bug, we had to disable a piece of functionality in tinyMCE. Specifically, tinyMCE will no longer remove what it thinks to be invalid html markup as long as this plugin is installed.

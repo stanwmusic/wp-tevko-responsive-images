@@ -53,11 +53,13 @@ function tevkori_get_src_sizes( $imageId ) {
 	$origWidth = wp_get_attachment_image_src( $imageId, 'full' )[1];
 	$sizeAlreadyCalled = false;
 	$mappings = array(
+		'medium',
+		'large',
+		'full',
         'tevkoriSmall-img',
         'tevkoriMedium-img',
         'tevkoriLarge-img',
-        'tevkoriSuper-img',
-        'full'
+        'tevkoriSuper-img'
     );
     if ( $origWidth > 320 ) {
 		foreach ( $mappings as $type ) {
