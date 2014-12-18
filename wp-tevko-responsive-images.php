@@ -49,12 +49,8 @@ add_filter('tiny_mce_before_init', 'override_mce_options');
 
 function tevkori_get_src_sizes( $imageId ) {
 	$arr = array();
-//	$origSrc = wp_get_attachment_image_src( $imageId, 'full' )[0];
 	$origSrc = wp_get_attachment_image_src( $imageId, 'full' );
-	$origSrc = $origSrc[0];
-//	$origWidth = wp_get_attachment_image_src( $imageId, 'full' )[1];
-        $origWidth = wp_get_attachment_image_src( $imageId, 'full' );
-        $origWidth = $origWidth[1];
+        $origWidth = $origSrc[1];
 	$sizeAlreadyCalled = false;
 	$mappings = array(
 		'medium',
