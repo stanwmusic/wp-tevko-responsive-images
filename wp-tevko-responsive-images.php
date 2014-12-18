@@ -51,7 +51,7 @@ function tevkori_get_src_sizes( $imageId ) {
 	$arr = array();
 //	$origSrc = wp_get_attachment_image_src( $imageId, 'full' )[0];
 	$origSrc = wp_get_attachment_image_src( $imageId, 'full' );
-	$origSrc = $origSrc[0];;
+	$origSrc = $origSrc[0];
 //	$origWidth = wp_get_attachment_image_src( $imageId, 'full' )[1];
         $origWidth = wp_get_attachment_image_src( $imageId, 'full' );
         $origWidth = $origWidth[1];
