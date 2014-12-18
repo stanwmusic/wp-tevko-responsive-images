@@ -83,9 +83,20 @@ function tevkori_get_src_sizes( $imageId ) {
 //extend image tag to include sizes attribute
 
 function tevkori_extend_image_tag( $html, $id ) {
+	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
 	$srcset = tevkori_get_src_sizes( $id );
+	remove_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
 	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1' . ' ' . $srcset, $html );
 	return $html;
 }
+add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 2 );
 
-add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 2 ); // weird bug happening here where w attributes get messed up
+/**
+ * Disable the editor size constraint applied for images in TinyMCE.
+ *
+ * @param  array $max_image_size An array with the width as the first element, and the height as the second element.
+ * @return array A width & height array so large it shouldn't constrain reasonable images.
+ */
+function tevkori_editor_image_size( $max_image_size ){
+	return array( 99999, 99999 );
+}
