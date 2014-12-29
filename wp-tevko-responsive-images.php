@@ -34,17 +34,6 @@ function tevkori_add_image_sizes() {
 
 add_action( 'plugins_loaded', 'tevkori_add_image_sizes' );
 
-//stop tinyMCE from altering srcsizes atribute - WILL NOT NEED AFTER WP 4.1
-
-function override_mce_options($initArray) {
-	$opts = '*[*]';
-	$initArray['valid_elements'] = $opts;
-	$initArray['extended_valid_elements'] = $opts;
-	return $initArray;
-}
-
-add_filter('tiny_mce_before_init', 'override_mce_options');
-
 //return an image with src and sizes attributes
 
 function tevkori_get_src_sizes( $imageId ) {
