@@ -8,7 +8,7 @@ defined('ABSPATH') or die("No script kiddies please!");
  * @wordpress-plugin
  * Plugin Name:       WP Tevko Responsive Images
  * Plugin URI:        http://css-tricks.com/hassle-free-responsive-images-for-wordpress/
- * Description:       Bringing automatic default responsive images to WordPress
+ * Description:       Bringing automatic default responsive images to wordpress
  * Version:           2.0.0
  * Author:            Tim Evko
  * Author URI:        http://timevko.com/
@@ -37,20 +37,22 @@ add_action( 'plugins_loaded', 'tevkori_add_image_sizes' );
 //return an image with src and sizes attributes
 
 function tevkori_get_src_sizes( $imageId ) {
+	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
 	$arr = array();
-	$origSrc = wp_get_attachment_image_src( $imageId, 'full' );
-        $origWidth = $origSrc[1];
+	$orig = wp_get_attachment_image_src( $imageId, 'full' );
+	$origSrc = $orig[0];
+	$origWidth = $orig[1];
 	$sizeAlreadyCalled = false;
 	$mappings = array(
 		'medium',
 		'large',
-		'full',
-        'tevkoriSmall-img',
-        'tevkoriMedium-img',
-        'tevkoriLarge-img',
-        'tevkoriSuper-img'
-    );
-    if ( $origWidth > 320 ) {
+		'tevkoriSmall-img',
+		'tevkoriMedium-img',
+		'tevkoriLarge-img',
+		'tevkoriSuper-img',
+		'full'
+	);
+	if ( $origWidth > 320 ) {
 		foreach ( $mappings as $type ) {
 			//we need to prevent duplicate srcsets if an image is smaller than the size we're asking
 			$image_src = wp_get_attachment_image_src( $imageId, $type );
@@ -72,9 +74,20 @@ function tevkori_get_src_sizes( $imageId ) {
 //extend image tag to include sizes attribute
 
 function tevkori_extend_image_tag( $html, $id ) {
+	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
 	$srcset = tevkori_get_src_sizes( $id );
+	remove_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
 	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1' . ' ' . $srcset, $html );
 	return $html;
 }
+add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 2 );
 
-add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 2 ); // weird bug happening here where w attributes get messed up
+/**
+ * Disable the editor size constraint applied for images in TinyMCE.
+ *
+ * @param  array $max_image_size An array with the width as the first element, and the height as the second element.
+ * @return array A width & height array so large it shouldn't constrain reasonable images.
+ */
+function tevkori_editor_image_size( $max_image_size ){
+	return array( 99999, 99999 );
+}
