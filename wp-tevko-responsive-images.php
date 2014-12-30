@@ -36,51 +36,58 @@ add_action( 'plugins_loaded', 'tevkori_add_image_sizes' );
 
 //return an image with src and sizes attributes
 
-function tevkori_get_src_sizes( $imageId ) {
-	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
-	$arr = array();
-	$orig = wp_get_attachment_image_src( $imageId, 'full' );
-	$origSrc = $orig[0];
-	$origWidth = $orig[1];
-	$sizeAlreadyCalled = false;
-	$mappings = array(
-		'medium',
-		'large',
-		'tevkoriSmall-img',
-		'tevkoriMedium-img',
-		'tevkoriLarge-img',
-		'tevkoriSuper-img',
-		'full'
-	);
-	if ( $origWidth > 320 ) {
-		foreach ( $mappings as $type ) {
-			//we need to prevent duplicate srcsets if an image is smaller than the size we're asking
-			$image_src = wp_get_attachment_image_src( $imageId, $type );
-			if ($image_src[3] && !$sizeAlreadyCalled) {
-				$arr[] = $image_src[0] . ' ' . $image_src[1] . 'w';
-			} elseif (!$image_src[3] && !$sizeAlreadyCalled) {
-				$arr[] = $image_src[0] . ' ' . $image_src[1] . 'w';
-				$sizeAlreadyCalled = true;
-			} elseif (!$image_src[3] && $sizeAlreadyCalled) {
-				break;
-			}
-		}
-		return 'srcset="' . implode( ', ', $arr ) . '"';
-	} else {
-		return;
-	}
+function tevkori_get_src_sizes( $id, $size ) {
+    $arr = array();
+    $src = wp_get_attachment_image_src( $id, $size );
+    $image = wp_get_attachment_metadata( $id );
+
+    // default sizes
+    $default_sizes = $image['sizes'];
+
+    // choose sizes based on the users needs.
+    $width = ( !empty($image['width']) && $size != 'full' ) ? $image['sizes'][$size]['width'] : $image['width'];
+
+    // We don't want cropped thumbnails
+    unset($default_sizes['thumbnail']);
+
+    // Our loop should not include the default passed size, yet.
+    unset($default_sizes[$size]);
+
+    // First, remove sizes we don't need to check for
+    foreach ($default_sizes as $key => $image_size) {
+        if( $image_size['width'] > $width ) {
+            unset($default_sizes[$key]);
+        }
+    }
+
+    // No sizes? Checkout early
+    if(!$default_sizes)
+        return false;
+
+    // Loop through each size we know should exist
+    foreach($default_sizes as $key => $size) {
+        
+        // Reference the size directly by it's pixel dimension
+        $image_src = wp_get_attachment_image_src( $id, $key );
+        //$image_src = cv_resize( $id, $size, $size, false );
+        $arr[] = $image_src[0] . ' ' . $size['width'] .'w';
+    }
+
+    $arr[] = $src[0] . ' ' . $src[1] . 'w';
+
+    return 'srcset="' . implode( ', ', $arr ) . '"';
 }
 
 //extend image tag to include sizes attribute
 
-function tevkori_extend_image_tag( $html, $id ) {
-	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
-	$srcset = tevkori_get_src_sizes( $id );
-	remove_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
-	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1' . ' ' . $srcset, $html );
-	return $html;
+function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
+    add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
+    $srcset = tevkori_get_src_sizes( $id, $size );
+    remove_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
+    $html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1' . ' ' . $srcset, $html );
+    return $html;
 }
-add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 2 );
+add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
 
 /**
  * Disable the editor size constraint applied for images in TinyMCE.
