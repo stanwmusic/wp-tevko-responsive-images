@@ -11,7 +11,9 @@ This plugin works by including 4 additional image sizes for each image upload. W
 
 ``<img src="pathToImage" <?php echo tevkori_get_src_sizes( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />``
 
-ex.) ``<img src="myimg.png" <?php echo tevkori_get_src_sizes( 11, 'tevkoriMedium-img' ); ?> />''
+ex.)
+
+``<img src="myimg.png" <?php echo tevkori_get_src_sizes( 11, 'tevkoriMedium-img' ); ?> />''
 
 ##Version
 
