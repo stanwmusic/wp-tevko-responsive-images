@@ -69,7 +69,6 @@ function tevkori_get_src_sizes( $id, $size ) {
         
         // Reference the size directly by it's pixel dimension
         $image_src = wp_get_attachment_image_src( $id, $key );
-        //$image_src = cv_resize( $id, $size, $size, false );
         $arr[] = $image_src[0] . ' ' . $size['width'] .'w';
     }
 
