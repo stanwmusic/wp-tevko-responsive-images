@@ -44,6 +44,21 @@ function tevkori_get_src_sizes( $id, $size ) {
 	// default sizes
 	$default_sizes = $image['sizes'];
 
+	// grab an array of all defined custom image sizes
+	global $_wp_additional_image_sizes;
+	$custom_sizes = $_wp_additional_image_sizes;
+
+	// find all the sizes which are hard-cropped
+	$hard_crops = array();
+	foreach ( $custom_sizes as $custom_size => $params ) {
+		if ( $params['crop'] ) {
+			$hard_crops[$custom_size] = $params;
+		}
+	}
+
+	// remove hard crops
+	$default_sizes = array_diff_key( $default_sizes, $hard_crops );
+
 	// choose sizes based on the users needs.
 	$width = ( !empty($image['width']) && $size != 'full' ) ? $image['sizes'][$size]['width'] : $image['width'];
 
