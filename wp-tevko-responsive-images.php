@@ -44,43 +44,31 @@ function tevkori_get_src_sizes( $id, $size ) {
 	// default sizes
 	$default_sizes = $image['sizes'];
 
-	// grab an array of all defined custom image sizes
-	global $_wp_additional_image_sizes;
-	$custom_sizes = $_wp_additional_image_sizes;
-
-	// find all the sizes which are hard-cropped
-	$hard_crops = array();
-	foreach ( $custom_sizes as $custom_size => $params ) {
-		if ( $params['crop'] ) {
-			$hard_crops[$custom_size] = $params;
-		}
-	}
-
-	// remove hard crops
-	$default_sizes = array_diff_key( $default_sizes, $hard_crops );
-
 	// choose sizes based on the users needs.
 	$width = ( !empty($image['width']) && $size != 'full' ) ? $image['sizes'][$size]['width'] : $image['width'];
+	$height = ( !empty($image['height']) && $size != 'full' ) ? $image['sizes'][$size]['height'] : $image['height'];
 
-	// We don't want cropped thumbnails
-	unset($default_sizes['thumbnail']);
+	// set ratio (rounded to hundredths)
+	$ratio = round( ($width / $height), 2);
 
 	// Our loop should not include the default passed size, yet.
 	unset($default_sizes[$size]);
 
-	// First, remove sizes we don't need to check for
-	foreach ($default_sizes as $key => $image_size) {
-		if( $image_size['width'] > $width ) {
-			unset($default_sizes[$key]);
+	// Remove any hard-crops
+	foreach ( $default_sizes as $key => $image_size ) {
+		$crop_ratio = round( ($image_size['width'] / $image_size['height']), 2 );
+
+		if( $crop_ratio !== $ratio ) {
+			unset( $default_sizes[$key] );
 		}
 	}
 
 	// No sizes? Checkout early
-	if(!$default_sizes)
-		return false;
+	if( ! $default_sizes )
+	return false;
 
 	// Loop through each size we know should exist
-	foreach($default_sizes as $key => $size) {
+	foreach( $default_sizes as $key => $size ) {
 
 		// Reference the size directly by it's pixel dimension
 		$image_src = wp_get_attachment_image_src( $id, $key );
