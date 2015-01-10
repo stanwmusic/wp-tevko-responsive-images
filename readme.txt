@@ -17,11 +17,11 @@ This plugin works by including 4 additional image sizes for each image upload. W
 
  You can output a responsive image anywhere you'd like by using the following syntax:
 
-``<img src="pathToImage" <?php echo tevkori_get_src_sizes( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />``
+`<img src="pathToImage" <?php echo tevkori_get_src_sizes( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />`
 
 ex.)
 
-```<img src="myimg.png" <?php echo tevkori_get_src_sizes( 11, 'tevkoriMedium-img' ); ?> />```
+`<img src="myimg.png" <?php echo tevkori_get_src_sizes( 11, 'tevkoriMedium-img' ); ?> />`
 
 == Installation ==
 
