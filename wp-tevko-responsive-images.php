@@ -24,16 +24,6 @@ function tevkori_get_picturefill() {
 }
 add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
 
-// Add support for our desired image sizes
-function tevkori_add_image_sizes() {
-	add_image_size( 'tevkoriSuper-img', 1280 );
-	add_image_size( 'tevkoriLarge-img', 960 );
-	add_image_size( 'tevkoriMedium-img', 640 );
-	add_image_size( 'tevkoriSmall-img', 320 );
-}
-
-add_action( 'plugins_loaded', 'tevkori_add_image_sizes' );
-
 //return an image with src and sizes attributes
 
 function tevkori_get_src_sizes( $id, $size ) {
@@ -44,15 +34,19 @@ function tevkori_get_src_sizes( $id, $size ) {
 	// default sizes
 	$default_sizes = $image['sizes'];
 
+	// add full size to the default_sizes array
+	$default_sizes['full'] = array(
+		'width' 	=> $image['width'],
+		'height'	=> $image['height'],
+		'file'		=> $image['file']
+	);
+
 	// choose sizes based on the users needs.
-	$width = ( !empty($image['width']) && $size != 'full' ) ? $image['sizes'][$size]['width'] : $image['width'];
-	$height = ( !empty($image['height']) && $size != 'full' ) ? $image['sizes'][$size]['height'] : $image['height'];
+	$width = ( ! empty($image['width']) && $size != 'full' ) ? $image['sizes'][$size]['width'] : $image['width'];
+	$height = ( ! empty($image['height']) && $size != 'full' ) ? $image['sizes'][$size]['height'] : $image['height'];
 
 	// set ratio (rounded to hundredths)
 	$ratio = round( ($width / $height), 2);
-
-	// Our loop should not include the default passed size, yet.
-	unset($default_sizes[$size]);
 
 	// Remove any hard-crops
 	foreach ( $default_sizes as $key => $image_size ) {
@@ -74,8 +68,6 @@ function tevkori_get_src_sizes( $id, $size ) {
 		$image_src = wp_get_attachment_image_src( $id, $key );
 		$arr[] = $image_src[0] . ' ' . $size['width'] .'w';
 	}
-
-	$arr[] = $src[0] . ' ' . $src[1] . 'w';
 
 	return 'srcset="' . implode( ', ', $arr ) . '"';
 }
