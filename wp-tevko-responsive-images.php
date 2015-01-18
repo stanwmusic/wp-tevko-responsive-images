@@ -91,6 +91,22 @@ function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $
 }
 add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
 
+// filter post_thumbnail_html to add srcset attributes to post_thumbnails
+function tevkory_filter_post_thumbnail_html( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
+	// if the HTML is empty, short circuit
+	if ( '' === $html ) {
+		return;
+	}
+
+	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
+	$srcset = tevkori_get_src_sizes( $post_thumbnail_id, $size );
+	remove_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
+	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1' . ' ' . $srcset, $html );
+	return $html;
+}
+add_filter( 'post_thumbnail_html', tevkory_filter_post_thumbnail_html, 0, 5);
+
+
 /**
  * Disable the editor size constraint applied for images in TinyMCE.
  *
