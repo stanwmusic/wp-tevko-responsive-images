@@ -122,7 +122,7 @@ add_action( 'admin_print_footer_scripts', function() {
 					sizes = post.attachment.attributes.sizes;
 
 				// calculate our target ratio and set up placeholders to hold our updated srcset data
-				var newRatio = image.width / image.height,
+				var newRatio = metadata.width / metadata.height,
 					srcset = '',
 					srcsetGroup = [];
 
