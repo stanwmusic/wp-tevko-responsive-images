@@ -3,7 +3,7 @@ WP-tevko-responsive-images
 
 Bringing automatic default responsive images to wordpress.
 
-This plugin works by including 4 additional image sizes for each image upload. Whenever wordpress outputs the image through the media uploader, whenever a featured image is generated, those 4 sizes (as well as the initial source and the default wordpress image sizes) will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute. 
+This plugin works by including 4 additional image sizes for each image upload. Whenever wordpress outputs the image through the media uploader, or whenever a featured image is generated, those 4 sizes (as well as the initial source and the default wordpress image sizes) will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute. 
 
 ##Hardcoding in template files
 
