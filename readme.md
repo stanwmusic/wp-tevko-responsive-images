@@ -1,4 +1,4 @@
-WP-tevko-responsive-images
+RICG-responsive-images
 ---
 
 Bringing automatic default responsive images to wordpress.
