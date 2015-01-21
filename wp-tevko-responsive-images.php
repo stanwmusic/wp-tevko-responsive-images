@@ -101,50 +101,7 @@ function tevkori_editor_image_size( $max_image_size ){
 	return array( 99999, 99999 );
 }
 
-// Hook and priority loads after tinymce.js and its plugins.
-add_action( 'admin_print_footer_scripts', function() {
-	?><script>
-	(function($) {
-
-		/**
-		 * Recalculate srcset attribute after an image-update event
-		 */
-		wp.media.events.on( 'editor:image-update', function( arguments ) {
-			// arguments[0] = { Editor, image, metadata }
-			var image = arguments.image
-				metadata = arguments.metadata;
-
-			// if the image url has changed, recalculate srcset attributes
-			if ( metadata && metadata.url !== metadata.originalUrl ) {
-				// we need toget the postdata for the image because
-				// the sizes array isn't passed into the editor
-				var post = new wp.media.model.PostImage( metadata ),
-					sizes = post.attachment.attributes.sizes;
-
-				// calculate our target ratio and set up placeholders to hold our updated srcset data
-				var newRatio = metadata.width / metadata.height,
-					srcset = '',
-					srcsetGroup = [];
-
-				// grab all the sizes that match our target ratio and add them to our srcsetGroup array
-				_.each(sizes, function(size){
-					var sizeRatio = size.width / size.height;
-
-					if (sizeRatio == newRatio) {
-						srcsetGroup.push(size.url + ' ' + size.width + 'w');
-					}
-				});
-
-				// convert the srcsetGroup array to our srcset value
-				srcset = srcsetGroup.join(', ');
-
-				// update the srcset attribute of our image
-				image.setAttribute( 'srcset', srcset );
-			}
-
-		});
-
-	})(jQuery);
-	</script>
-	<?php
-}, 100 );
+function tevkori_load_scripts() {
+	wp_enqueue_script( 'wp-tevko-responsive-images', plugin_dir_url( __FILE__ ) . 'js/wp-tevko-responsive-images.js', array('wp-backbone'), '2.0.0', true );
+}
+add_action( 'admin_enqueue_scripts', 'tevkori_load_scripts' );
