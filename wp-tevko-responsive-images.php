@@ -101,7 +101,9 @@ function tevkori_editor_image_size( $max_image_size ){
 	return array( 99999, 99999 );
 }
 
-function tevkori_load_scripts() {
-	wp_enqueue_script( 'wp-tevko-responsive-images', plugin_dir_url( __FILE__ ) . 'js/wp-tevko-responsive-images.js', array('wp-backbone'), '2.0.0', true );
+function tevkori_load_admin_scripts( $hook ) {
+	if ($hook == 'post.php' || $hook == 'post-new.php') {
+		wp_enqueue_script( 'wp-tevko-responsive-images', plugin_dir_url( __FILE__ ) . 'js/wp-tevko-responsive-images.js', array('wp-backbone'), '2.0.0', true );
+	}
 }
-add_action( 'admin_enqueue_scripts', 'tevkori_load_scripts' );
+add_action( 'admin_enqueue_scripts', 'tevkori_load_admin_scripts' );
