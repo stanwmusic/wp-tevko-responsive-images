@@ -32,7 +32,7 @@ ex.)
 
 == Changelog ==
 
-= 1.0 =
+= 2.0 =
  * Uses [Picturefill 2.2.2 (Beta)](http://scottjehl.github.io/picturefill/)
  * Scripts are output to footer
  * Image sizes adjusted
