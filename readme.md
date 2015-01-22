@@ -25,7 +25,7 @@ ex.)
 - Added support for featured images
 
 **2.0.0**
- - Uses [Picturefill 2.2.2 (Beta)](http://scottjehl.github.io/picturefill/)
+ - Uses [Picturefill 2.2.0 (Beta)](http://scottjehl.github.io/picturefill/)
  - Scripts are output to footer
  - Image sizes adjusted
  - Most importantly, the srcset syntax is being used
