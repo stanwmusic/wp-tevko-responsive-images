@@ -94,7 +94,7 @@ function tevkori_filter_post_thumbnail_html( $html, $post_id, $post_thumbnail_id
 	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1' . ' ' . $srcset, $html );
 	return $html;
 }
-add_filter( 'post_thumbnail_html', tevkori_filter_post_thumbnail_html, 0, 5);
+add_filter( 'post_thumbnail_html', 'tevkori_filter_post_thumbnail_html', 0, 5);
 
 
 /**
