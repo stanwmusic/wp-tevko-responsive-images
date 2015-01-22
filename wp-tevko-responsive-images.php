@@ -9,7 +9,7 @@ defined('ABSPATH') or die("No script kiddies please!");
  * Plugin Name:       WP Tevko Responsive Images
  * Plugin URI:        http://css-tricks.com/hassle-free-responsive-images-for-wordpress/
  * Description:       Bringing automatic default responsive images to wordpress
- * Version:           2.0.0
+ * Version:           2.0.1
  * Author:            Tim Evko
  * Author URI:        http://timevko.com/
  * License:           GPL-2.0+
