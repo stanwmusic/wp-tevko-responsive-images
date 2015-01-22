@@ -13,7 +13,7 @@ Bringing automatic default responsive images to WordPress.
 
 **If you'd like to contribute to this plugin, please do so on [Github](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images)**
 
-Basically, responsive images allow the browser to choose the best image from a list. This plugin works by including four additional image sizes for each image upload. Whenever WordPress outputs the image through the media uploader, or whenever a featured image is generated, those four sizes (as well as the initial source and the default WordPress image sizes) will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
+Basically, responsive images allow the browser to choose the best image from a list. This plugin works by including all available image sizes for each image upload. Whenever WordPress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
 
 **Hardcoding in template files**
 
@@ -31,6 +31,9 @@ ex.)
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog ==
+= 2.1 =
+ * Only outputs the default wordpress sizes, giving theme developers the option to extend as needed
+ * Added support for featured images
 
 = 2.0 =
  * Uses [Picturefill 2.2.2 (Beta)](http://scottjehl.github.io/picturefill/)
