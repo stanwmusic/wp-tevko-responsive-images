@@ -51,7 +51,7 @@ function tevkori_get_src_sizes( $id, $size ) {
 	);
 
 	// set ratio (rounded to hundredths)
-	$ratio = floor(  ($img_width / $img_height) * 1000 );
+	$ratio = round( ($img_width / $img_height), 2);
 
 	// Remove any hard-crops
 	foreach ( $default_sizes as $key => $image_size ) {
