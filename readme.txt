@@ -1,5 +1,5 @@
 === RICG Responsive Images ===
-Contributors: Tim Evko, Mat Marquis, Chris Coyier, Michael McGinnis, Joe McGill, Kelly Dwan, Brandon Lavigne, Andrew Nacin , George Stephanis, Helen Hou-Sandí, Bocoup, The Wordpress Core Team
+Contributors: Tim Evko, Mat Marquis, Chris Coyier, Joe McGill, Michael McGinnis, Kelly Dwan, Brandon Lavigne, Andrew Nacin , George Stephanis, Helen Hou-Sandí, Bocoup, The Wordpress Core Team
 Tags: Responsive, Images, Responsive Images, SRCSET, Picturefill
 Requires at least: 4.1
 Tested up to: 4.1
@@ -32,7 +32,7 @@ ex.)
 
 == Changelog ==
 = 2.1 =
- * Only outputs the default wordpress sizes, giving theme developers the option to extend as needed
+ * Only outputs the default WordPress sizes, giving theme developers the option to extend as needed
  * Added support for featured images
 
 = 2.0 =
