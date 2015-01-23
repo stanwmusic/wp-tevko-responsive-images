@@ -28,25 +28,30 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
 
 function tevkori_get_src_sizes( $id, $size ) {
 	$arr = array();
-	$src = wp_get_attachment_image_src( $id, $size );
-	$image = wp_get_attachment_metadata( $id );
+
+	// See which image is being returned and bail if none is found
+	if ( ! $image = wp_get_attachment_image_src( $id, $size ) ) {
+		return false;
+	};
+
+	// break image data into url, width, and height
+	list( $img_url, $img_width, $img_height ) = $image;
+
+	// image meta
+	$image_meta = wp_get_attachment_metadata( $id );
 
 	// default sizes
-	$default_sizes = $image['sizes'];
+	$default_sizes = $image_meta['sizes'];
 
 	// add full size to the default_sizes array
 	$default_sizes['full'] = array(
-		'width' 	=> $image['width'],
-		'height'	=> $image['height'],
-		'file'		=> $image['file']
+		'width' 	=> $image_meta['width'],
+		'height'	=> $image_meta['height'],
+		'file'		=> $image_meta['file']
 	);
 
-	// choose sizes based on the users needs.
-	$width = ( ! empty($image['width']) && $size != 'full' ) ? $image['sizes'][$size]['width'] : $image['width'];
-	$height = ( ! empty($image['height']) && $size != 'full' ) ? $image['sizes'][$size]['height'] : $image['height'];
-
 	// set ratio (rounded to hundredths)
-	$ratio = round( ($width / $height), 2);
+	$ratio = round( ($img_width / $img_height), 2);
 
 	// Remove any hard-crops
 	foreach ( $default_sizes as $key => $image_size ) {
