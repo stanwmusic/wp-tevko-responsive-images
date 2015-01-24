@@ -7,8 +7,10 @@
    */
   wp.media.events.on( 'editor:image-update', function( args ) {
     // arguments[0] = { Editor, image, metadata }
-    var image = args.image,
-      metadata = args.metadata;
+	  var image = args.image,
+			metadata = args.metadata,
+			srcsetGroup = [],
+			srcset = '';
 
     // if the image url has changed, recalculate srcset attributes
     if ( metadata && metadata.url !== metadata.originalUrl ) {
@@ -17,16 +19,11 @@
       var imagePostData = new wp.media.model.PostImage( metadata ),
         sizes = imagePostData.attachment.attributes.sizes;
 
-      // calculate our target ratio and set up placeholders to hold our updated srcset data
-      var newRatio = metadata.width / metadata.height,
-        srcset = '',
-        srcsetGroup = [];
-
-      // grab all the sizes that match our target ratio and add them to our srcsetGroup array
+      // grab all the sizes that match our target ratio and add them to our srcset array
       _.each(sizes, function(size){
-        var sizeRatio = size.width / size.height;
+        var softHeight = Math.round( size.width * metadata.height / metadata.width );
 
-        if (sizeRatio === newRatio) {
+        if (softHeight === size.height) {
           srcsetGroup.push(size.url + ' ' + size.width + 'w');
         }
       });
