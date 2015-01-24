@@ -50,14 +50,13 @@ function tevkori_get_src_sizes( $id, $size ) {
 		'file'		=> $image_meta['file']
 	);
 
-	// set ratio (rounded to hundredths)
-	$ratio = round( ($img_width / $img_height), 2);
-
 	// Remove any hard-crops
 	foreach ( $default_sizes as $key => $image_size ) {
-		$crop_ratio = round( ($image_size['width'] / $image_size['height']), 2 );
 
-		if( $crop_ratio !== $ratio ) {
+		// calculate the height we would expect if this is a soft crop given the size width
+		$soft_height = (int) round( $image_size['width'] * $img_height / $img_width );
+
+		if( $image_size['height'] !== $soft_height ) {
 			unset( $default_sizes[$key] );
 		}
 	}
