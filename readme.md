@@ -21,7 +21,7 @@ ex.)
 
 ##Changelog
 
-- **This version introduces a breaking change** - there are now two functions. One returns an array of srcset values, and the other returns a string with the ``srcset=".."`` html needed to generate the responsive image. To retrieve the srcset array, us ``tevkori_get_srcset_array( $id, $size )``
+- **This version introduces a breaking change** - there are now two functions. One returns an array of srcset values, and the other returns a string with the ``srcset=".."`` html needed to generate the responsive image. To retrieve the srcset array, use ``tevkori_get_srcset_array( $id, $size )``
 
 - When the image size is changed in the post editor, the srcset values will adjust to match the change.
 
