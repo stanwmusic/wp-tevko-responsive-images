@@ -6,10 +6,10 @@ defined('ABSPATH') or die("No script kiddies please!");
  * @package           http://css-tricks.com/hassle-free-responsive-images-for-wordpress/
  *
  * @wordpress-plugin
- * Plugin Name:       WP Tevko Responsive Images
+ * Plugin Name:       RICG Responsive Images
  * Plugin URI:        http://css-tricks.com/hassle-free-responsive-images-for-wordpress/
  * Description:       Bringing automatic default responsive images to wordpress
- * Version:           2.0.2
+ * Version:           2.1.0
  * Author:            Tim Evko
  * Author URI:        http://timevko.com/
  * License:           GPL-2.0+
@@ -80,6 +80,9 @@ function tevkori_get_srcset_array( $id, $size ) {
 
 function tevkori_get_srcset_string( $id, $size ) {
 	$srcset_array = tevkori_get_srcset_array( $id, $size );
+	if ( empty( $srcset_array ) ) {
+		return false;
+	}
 	return 'srcset="' . implode( ', ', $srcset_array ) . '"';
 }
 

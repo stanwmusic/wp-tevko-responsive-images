@@ -3,23 +3,29 @@ RICG-responsive-images
 
 Bringing automatic default responsive images to wordpress.
 
-This plugin works by including all available image sizes for each image upload. Whenever wordpress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute. 
+This plugin works by including all available image sizes for each image upload. Whenever wordpress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
 
 ##Hardcoding in template files
 
  You can output a responsive image anywhere you'd like by using the following syntax:
 
-``<img src="pathToImage" <?php echo tevkori_get_src_sizes( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />``
+``<img src="pathToImage" <?php echo tevkori_get_srcset_string( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />``
 
 ex.)
 
-```<img src="myimg.png" <?php echo tevkori_get_src_sizes( 11, 'tevkoriMedium-img' ); ?> />```
+```<img src="myimg.png" <?php echo tevkori_get_srcset_string( 11, 'medium' ); ?> />```
 
 ##Version
 
-2.0.2
+2.1.0
 
 ##Changelog
+
+- **This version introduces a breaking change** - there are now two functions. One returns an array of srcset values, and the other returns a string with the ``srcset=".."`` html needed to generate the responsive image. To retrieve the srcset array, us ``tevkori_get_srcset_array( $id, $size )``
+
+- When the image size is changed in the post editor, the srcset values will adjust to match the change.
+
+**2.0.2**
 
 - A bugfix correcting a divide by zero error. Some users may have seen this after upgrading to 2.0.1
 
