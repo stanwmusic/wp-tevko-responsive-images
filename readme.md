@@ -1,9 +1,9 @@
 RICG-responsive-images
 ---
 
-Bringing automatic default responsive images to wordpress.
+Bringing automatic default responsive images to WordPress.
 
-This plugin works by including all available image sizes for each image upload. Whenever wordpress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
+This plugin works by including all available image sizes for each image upload. Whenever WordPress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
 
 ##Hardcoding in template files
 
@@ -30,7 +30,7 @@ ex.)
 - A bugfix correcting a divide by zero error. Some users may have seen this after upgrading to 2.0.1
 
 **2.0.1**
-- Only outputs the default wordpress sizes, giving theme developers the option to extend as needed
+- Only outputs the default WordPress sizes, giving theme developers the option to extend as needed
 - Added support for featured images
 
 **2.0.0**
@@ -38,6 +38,6 @@ ex.)
  - Scripts are output to footer
  - Image sizes adjusted
  - Most importantly, the srcset syntax is being used
- - The structure of the plugin is significantly different. The plugin now works by extending the default wordpress image tag functionality to include the srcset attribute.
+ - The structure of the plugin is significantly different. The plugin now works by extending the default WordPress image tag functionality to include the srcset attribute.
  - Works for cropped images!
  - Backwards compatible (images added before plugin install will still be responsive)!
