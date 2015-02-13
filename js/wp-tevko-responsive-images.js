@@ -23,7 +23,8 @@
       _.each(sizes, function(size){
         var softHeight = Math.round( size.width * metadata.height / metadata.width );
 
-        if (softHeight === size.height) {
+        // If the height is within 1 integer of the expected height, let it pass.
+        if ( size.height >= softHeight - 1 && size.height <= softHeight + 1  ) {
           srcsetGroup.push(size.url + ' ' + size.width + 'w');
         }
       });
