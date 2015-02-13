@@ -86,6 +86,16 @@ function tevkori_get_srcset_string( $id, $size ) {
 	return 'srcset="' . implode( ', ', $srcset_array ) . '"';
 }
 
+//Backwards compatibility for older plugin function
+
+/**
+*	WARNING - THIS FUNCTION IS NOW DEPRECIATED AND ME BE SUBJECT TO REMOVAL IN LATER VERSIONS
+**/
+
+function tevkori_get_src_sizes($id, $size) {
+	return tevkori_get_srcset_string( $id, $size );
+}
+
 //extend image tag to include srcset attribute
 
 function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
