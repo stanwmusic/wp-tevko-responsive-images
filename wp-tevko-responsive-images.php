@@ -97,17 +97,19 @@ function tevkori_get_srcset_string( $id, $size ) {
 	return 'srcset="' . implode( ', ', $srcset_array ) . '"';
 }
 
-//Backwards compatibility for older plugin function
-
 /**
-*	WARNING - THIS FUNCTION IS NOW DEPRECIATED AND ME BE SUBJECT TO REMOVAL IN LATER VERSIONS
-**/
-
+ * Create a 'srcset' attribute.
+ *
+ * @deprecated 2.1.0
+ * @deprecated Use tevkori_get_srcset_string
+ * @see tevkori_get_srcset_string
+ *
+ * @param int $id 			Image attacment ID.
+ * @return string|bool 	A full 'srcset' string or false.
+ */
 function tevkori_get_src_sizes($id, $size) {
 	return tevkori_get_srcset_string( $id, $size );
 }
-
-//extend image tag to include srcset attribute
 
 /**
  * Filter for extending image tag to include srcset attribute
@@ -115,7 +117,6 @@ function tevkori_get_src_sizes($id, $size) {
  * @see 'images_send_to_editor'
  * @return string HTML for image.
  */
-
 function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
 	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
 	$srcset = tevkori_get_srcset_string( $id, $size );
@@ -126,11 +127,11 @@ function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $
 add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
 
 /**
-* Filter to add srcset attributes to post_thumbnails
-*
-* @see 'post_thumbnail_html'
-* @return string HTML for image.
-*/
+ * Filter to add srcset attributes to post_thumbnails
+ *
+ * @see 'post_thumbnail_html'
+ * @return string HTML for image.
+ */
 function tevkori_filter_post_thumbnail_html( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
 	// if the HTML is empty, short circuit
 	if ( '' === $html ) {
@@ -142,7 +143,6 @@ function tevkori_filter_post_thumbnail_html( $html, $post_id, $post_thumbnail_id
 	return $html;
 }
 add_filter( 'post_thumbnail_html', 'tevkori_filter_post_thumbnail_html', 0, 5);
-
 
 /**
  * Disable the editor size constraint applied for images in TinyMCE.
