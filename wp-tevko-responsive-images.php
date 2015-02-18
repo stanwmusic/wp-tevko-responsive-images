@@ -62,7 +62,8 @@ function tevkori_get_srcset_array( $id, $size ) {
 		// calculate the height we would expect if this is a soft crop given the size width
 		$soft_height = (int) round( $image_size['width'] * $img_height / $img_width );
 
-		if( $image_size['height'] !== $soft_height ) {
+		// If image height varies more than 1px over the expected, throw it out.
+		if ( $image_size['height'] <= $soft_height - 1 || $image_size['height'] >= $soft_height + 1  ) {
 			unset( $default_sizes[$key] );
 		}
 	}
