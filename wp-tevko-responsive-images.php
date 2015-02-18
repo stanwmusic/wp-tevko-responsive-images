@@ -32,7 +32,7 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * @param string $size	Optional. Name of image size. Default value: 'thumbnail'.
  * @return array|bool 	An array of of srcset values or false.
  */
-function tevkori_get_srcset_array( $id, $size ) {
+function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	$arr = array();
 
 	// See which image is being returned and bail if none is found
@@ -90,7 +90,7 @@ function tevkori_get_srcset_array( $id, $size ) {
  * @param string $size	Optional. Name of image size. Default value: 'thumbnail'.
  * @return string|bool 	A full 'srcset' string or false.
  */
-function tevkori_get_srcset_string( $id, $size ) {
+function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
 	$srcset_array = tevkori_get_srcset_array( $id, $size );
 	if ( empty( $srcset_array ) ) {
 		return false;
@@ -108,7 +108,7 @@ function tevkori_get_srcset_string( $id, $size ) {
  * @param int $id 			Image attacment ID.
  * @return string|bool 	A full 'srcset' string or false.
  */
-function tevkori_get_src_sizes($id, $size) {
+function tevkori_get_src_sizes( $id, $size = 'thumbnail' ) {
 	return tevkori_get_srcset_string( $id, $size );
 }
 
