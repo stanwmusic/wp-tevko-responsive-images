@@ -63,7 +63,7 @@ function tevkori_get_srcset_array( $id, $size ) {
 		$soft_height = (int) round( $image_size['width'] * $img_height / $img_width );
 
 		// If image height varies more than 1px over the expected, throw it out.
-		if ( $image_size['height'] <= $soft_height - 1 || $image_size['height'] >= $soft_height + 1  ) {
+		if ( $image_size['height'] <= $soft_height - 2 || $image_size['height'] >= $soft_height + 2  ) {
 			unset( $default_sizes[$key] );
 		}
 	}
