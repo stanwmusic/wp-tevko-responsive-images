@@ -63,6 +63,70 @@ class SampleTest extends WP_UnitTestCase {
 
 	/* OUR TESTS */
 
+	function test_tevkori_get_sizes() {
+		// make an image
+		$id = $this->_test_img();
+
+		global $content_width;
+
+		// test sizes against the default WP sizes
+		$intermediates = array('thumbnail', 'medium', 'large');
+
+		foreach( $intermediates as $int ) {
+			$width = get_option( $int . '_size_w' );
+
+			// the sizes width gets constrained to $content_width by default
+			if ( $content_width > 0 ) {
+				$width = ( $width > $content_width ) ? $content_width : $width;
+			}
+
+			$expected = '(max-width: ' . $width . 'px) 100vw, ' . $width . 'px';
+			$sizes = tevkori_get_sizes( $id, $int );
+
+			$this->assertSame($expected, $sizes);
+		}
+	}
+
+	function test_tevkori_get_sizes_with_args() {
+		// make an image
+		$id = $this->_test_img();
+
+		$args = array(
+			'sizes' => array(
+				array(
+					'size_value' 	=> '10em',
+					'mq_value'		=> '60em',
+					'mq_name'			=> 'min-width'
+				),
+				array(
+					'size_value' 	=> '20em',
+					'mq_value'		=> '30em',
+					'mq_name'			=> 'min-width'
+				),
+				array(
+					'size_value'	=> 'calc(100vm - 30px)'
+				),
+			)
+		);
+
+		$expected = '(min-width: 60em) 10em, (min-width: 30em) 20em, calc(100vm - 30px)';
+		$sizes = tevkori_get_sizes( $id, 'medium', $args );
+
+		$this->assertSame($expected, $sizes);
+	}
+
+	function test_tevkori_get_sizes_string() {
+		// make an image
+		$id = $this->_test_img();
+
+		$sizes = tevkori_get_sizes($id, 'medium');
+		$sizes_string = tevkori_get_sizes_string( $id, 'medium' );
+
+		$expected = 'sizes="' . $sizes . '"';
+
+		$this->assertSame( $expected, $sizes_string);
+	}
+
 	function test_tevkori_get_srcset_array() {
 		// make an image
 		$id = $this->_test_img();
