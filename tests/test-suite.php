@@ -69,24 +69,31 @@ class SampleTest extends WP_UnitTestCase {
 		$sizes = tevkori_get_srcset_array( $id, 'medium' );
 
 		$year_month = date('Y/m');
+		$image = wp_get_attachment_metadata( $id );
+		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
+
 		$expected = array(
-			'http://example.org/wp-content/uploads/' . $year_month . '/test-large-300x225.png 300w',
-			'http://example.org/wp-content/uploads/' . $year_month . '/test-large-1024x768.png 1024w',
-			'http://example.org/wp-content/uploads/' . $year_month . '/test-large.png 1600w'
+			'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+				. $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
+			'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+				. $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w',
+			'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
 		);
 
 		$this->assertSame( $expected, $sizes );
 	}
-
 
 	function test_tevkori_get_srcset_array_thumb() {
 		// make an image
 		$id = $this->_test_img();
 		$sizes = tevkori_get_srcset_array( $id, 'thumbnail' );
 
+		$image = wp_get_attachment_metadata( $id );
+
 		$year_month = date('Y/m');
 		$expected = array(
-			'http://example.org/wp-content/uploads/' . $year_month . '/test-large-150x150.png 150w'
+			'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+				. $image['sizes']['thumbnail']['file'] . ' ' . $image['sizes']['thumbnail']['width'] . 'w',
 		);
 
 		$this->assertSame( $expected, $sizes );
@@ -105,10 +112,15 @@ class SampleTest extends WP_UnitTestCase {
 		$id = $this->_test_img();
 		$sizes = tevkori_get_srcset_string( $id, 'full-size' );
 
+		$image = wp_get_attachment_metadata( $id );
 		$year_month = date('Y/m');
-		$expected = 'srcset="' . 'http://example.org/wp-content/uploads/' . $year_month . '/test-large-300x225.png 300w, ' .
-		'http://example.org/wp-content/uploads/' . $year_month . '/test-large-1024x768.png 1024w, ' .
-		'http://example.org/wp-content/uploads/' . $year_month . '/test-large.png 1600w"';
+
+		$expected = 'srcset="';
+		$expected .= 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+			. $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w, ';
+		$expected .='http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+			. $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w, ';
+		$expected .= 'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w"';
 
 		$this->assertSame( $expected, $sizes );
 	}
