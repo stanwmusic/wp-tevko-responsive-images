@@ -33,7 +33,7 @@ ex.)
 
 == Changelog ==
 = 2.1.1 =
-* Adding in wp-tevko-responsive-images.js after file not found to be in wordpress repository
+* Adding in wp-tevko-responsive-images.js after file not found to be in WordPress repository
 * Adjusts the aspect ratio check in tevkori_get_srcset_array() to account for rounding variance
 
 = 2.1.0 =
