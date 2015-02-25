@@ -3,15 +3,15 @@ defined('ABSPATH') or die("No script kiddies please!");
 /**
  * @link              https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images
  * @since             2.0.0
- * @package           http://web-design-weekly.com/2015/01/20/ricg-responsive-images-plugin/
+ * @package           http://www.smashingmagazine.com/2015/02/24/ricg-responsive-images-for-wordpress/
  *
  * @wordpress-plugin
  * Plugin Name:       RICG Responsive Images
- * Plugin URI:        http://web-design-weekly.com/2015/01/20/ricg-responsive-images-plugin/
+ * Plugin URI:        http://www.smashingmagazine.com/2015/02/24/ricg-responsive-images-for-wordpress/
  * Description:       Bringing automatic default responsive images to wordpress
- * Version:           2.1.0
- * Author:            Tim Evko
- * Author URI:        http://timevko.com/
+ * Version:           2.1.1
+ * Author:            The RICG
+ * Author URI:        http://responsiveimages.org/
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
