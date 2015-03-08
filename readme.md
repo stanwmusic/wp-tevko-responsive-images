@@ -7,15 +7,35 @@ Bringing automatic default responsive images to WordPress.
 
 This plugin works by including all available image sizes for each image upload. Whenever WordPress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
 
-##Hardcoding in template files
+##Documentation
 
- You can output a responsive image anywhere you'd like by using the following syntax:
+###For General Users
+
+No configuration is needed! Just install the plugin and enjoy automatic responsive images!
+
+###For Theme Developers
+
+**Functions**
+
+```tevkori_get_sizes( $id, $size, $args )``` - Returns a valid source size value for use in a 'sizes' attribute. The parameters include the Id of the image, the default size of the image, and an array or string containing of size information. The Id parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L28)
+
+```tevkori_get_sizes_string( $id, $size, $args)``` - Returns an array of image sources candidates for use in a 'srcset' attribute. The parameters include the Id of the image, the default size of the image, and An array of of srcset values. The Id parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L132)
+
+```tevkori_get_srcset_string( $id, $size )``` - Returns A full 'srcset' attribute. The parameters include the Id of the image and its default size. The Id parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L196)
+
+***Hardcoding in template files***
+
+You can output a responsive image anywhere you'd like by using the following syntax:
 
 ``<img src="pathToImage" <?php echo tevkori_get_srcset_string( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />``
 
 ex.)
 
 ```<img src="myimg.png" <?php echo tevkori_get_srcset_string( 11, 'medium' ); ?> />```
+
+**Dependencies**
+
+The only external dependency included in this plugin is Picturefill - v2.2.0-beta. If you would like to remove Picturefill, add the following line to your functions.php file: ```wp_dequeue_script('picturefill')```
 
 ##Version
 
