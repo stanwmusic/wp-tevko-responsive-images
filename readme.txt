@@ -12,19 +12,11 @@ Bringing automatic default responsive images to WordPress.
 
 == Description ==
 
-**If you'd like to contribute to this plugin, please do so on [Github](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images)**
+Bringing automatic default responsive images to WordPress.
 
-Basically, responsive images allow the browser to choose the best image from a list. This plugin works by including all available image sizes for each image upload. Whenever WordPress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
+This plugin works by including all available image sizes for each image upload. Whenever WordPress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the srcset attribute.
 
-**Hardcoding in template files**
-
- You can output a responsive image anywhere you'd like by using the following syntax:
-
-`<img src="pathToImage" <?php echo tevkori_get_srcset_string( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />`
-
-ex.)
-
-`<img src="myimg.png" <?php echo tevkori_get_srcset_string( 11, 'medium' ); ?> />`
+**Full documentation and contributor guidelines can be found on [Github](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images)**
 
 == Installation ==
 
