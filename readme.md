@@ -15,23 +15,41 @@ No configuration is needed! Just install the plugin and enjoy automatic responsi
 
 ###For Theme Developers
 
-**Functions**
+This plugin includes several functions that can be used by theme and plugin developers in templates.
 
-`tevkori_get_sizes( $id, $size, $args )` – Returns a valid source size value for use in a 'sizes' attribute. The parameters include the ID of the image, the default size of the image, and an array or string containing of size information. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L28)
+####tevkori_get_sizes( $id, $size, $args )
 
-`tevkori_get_sizes_string( $id, $size, $args)` – Returns an array of image source candidates for use in a 'srcset' attribute. The parameters include the ID of the image, the default size of the image, and An array of of srcset values. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L132)
+Returns a valid source size value for use in a 'sizes' attribute. The parameters include the ID of the image, the default size of the image, and an array or string containing of size information. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L28)
 
-`tevkori_get_srcset_string( $id, $size )` – Returns A full 'srcset' attribute. The parameters include the ID of the image and its default size. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L196)
+***Usage Example***
 
-***Hardcoding in template files***
+```
+<img src="myimg.png" sizes="<?php echo tevkori_get_sizes( 11, 'medium' ); ?>" >
+```
 
-You can output a responsive image anywhere you'd like by using the following syntax:
+---
 
-``<img src="pathToImage" <?php echo tevkori_get_srcset_string( TheIdOfYourImage, theLargestImageSizeNeeded ); ?> />``
+####tevkori_get_sizes_string( $id, $size, $args)
 
-ex.)
+Returns an array of image source candidates for use in a 'srcset' attribute. The parameters include the ID of the image, the default size of the image, and An array of of srcset values. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L132)
 
-```<img src="myimg.png" <?php echo tevkori_get_srcset_string( 11, 'medium' ); ?> />```
+***Usage Example***
+
+```
+<img src="myimg.png" <?php echo tevkori_get_sizes_string( 11, 'medium' ); ?> >
+```
+
+---
+
+####tevkori_get_srcset_string( $id, $size )
+
+Returns A full 'srcset' attribute. The parameters include the ID of the image and its default size. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L196)
+
+***Usage Example***
+
+```
+<img src="myimg.png" <?php echo tevkori_get_srcset_string( 11, 'medium' ); ?> >
+```
 
 **Dependencies**
 
