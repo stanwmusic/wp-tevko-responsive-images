@@ -53,7 +53,7 @@ Returns A full 'srcset' attribute. The parameters include the ID of the image an
 
 **Dependencies**
 
-The only external dependency included in this plugin is Picturefill - v2.2.0-beta. If you would like to remove Picturefill, add the following line to your functions.php file: ```wp_dequeue_script('picturefill')```
+The only external dependency included in this plugin is Picturefill - v2.2.0. If you would like to remove Picturefill, add the following line to your functions.php file: ```wp_dequeue_script('picturefill')```
 
 ##Version
 
