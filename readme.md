@@ -27,6 +27,39 @@ Returns a valid source size value for use in a 'sizes' attribute. The parameters
 <img src="myimg.png" sizes="<?php echo tevkori_get_sizes( 11, 'medium' ); ?>" >
 ```
 
+By default, the sizes attribute will be declared as 100% of the viewport width when the viewport width is smaller than the width of the image, or to the width of the image itself when the viewport is larger than the image. In other words, this:
+
+`(max-width: {{image-width}}) 100vw, {{image-width}}`
+
+You can override those defaults by passing your own size values as set of arrays to the `$args` parameter.
+
+*Example:*
+
+```
+$args = array(
+  'sizes' => array(
+    array(
+      'size_value' 	=> '10em',
+      'mq_value'		=> '60em',
+      'mq_name'			=> 'min-width'
+    ),
+    array(
+      'size_value' 	=> '20em',
+      'mq_value'		=> '30em',
+      'mq_name'			=> 'min-width'
+    ),
+    array(
+      'size_value'	=> 'calc(100vm - 30px)'
+    ),
+  )
+);
+
+$sizes = tevkori_get_sizes( $id, 'medium', $args );
+```
+
+Which would output a sizes value of:
+`(min-width: 60em) 10em, (min-width: 30em) 20em, calc(100vm - 30px)`
+
 ---
 
 ####tevkori_get_sizes_string( $id, $size, $args)
