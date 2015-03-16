@@ -64,12 +64,33 @@ Which would output a sizes value of:
 
 ####tevkori_get_sizes_string( $id, $size, $args)
 
-Returns an array of image source candidates for use in a 'srcset' attribute. The parameters include the ID of the image, the default size of the image, and An array of of srcset values. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L132)
+Returns A full 'sizes' attribute. The parameters include the ID of the image, the default size of the image, and an array or string containing of size information. The ID parameter is required.
 
 ***Usage Example***
 
 ```
 <img src="myimg.png" <?php echo tevkori_get_sizes_string( 11, 'medium' ); ?> >
+```
+
+---
+########tevkori_get_srcset_array( $id, $size )
+
+Returns an array of image source candidates for use in a 'srcset' attribute. The parameters include the ID of the image, the default size of the image, and An array of of srcset values. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L132)
+
+***Usage Example***
+
+```
+
+$sources = tevkori_get_srcset_array( 11, 'medium );
+
+$srcset = array();
+foreach( $srcset as $source ) {
+ if ( false === strpos(' 900w', $source) {
+  $srcset[] = $source;
+ }
+}
+
+<img src="myimg.png" srcset="<?php implode( ', ', $srcset ); ?>" >
 ```
 
 ---
