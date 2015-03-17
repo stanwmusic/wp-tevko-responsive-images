@@ -73,7 +73,7 @@ Returns A full 'sizes' attribute. The parameters include the ID of the image, th
 ```
 
 ---
-########tevkori_get_srcset_array( $id, $size )
+####tevkori_get_srcset_array( $id, $size )
 
 Returns an array of image source candidates for use in a 'srcset' attribute. The parameters include the ID of the image, the default size of the image, and An array of of srcset values. The ID parameter is required. [Link](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/blob/master/wp-tevko-responsive-images.php#L132)
 
@@ -81,7 +81,7 @@ Returns an array of image source candidates for use in a 'srcset' attribute. The
 
 ```
 
-$sources = tevkori_get_srcset_array( 11, 'medium );
+$sources = tevkori_get_srcset_array( 11, 'medium' );
 
 $srcset = array();
 foreach( $srcset as $source ) {
