@@ -188,18 +188,33 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 }
 
 /**
- * Create a 'srcset' attribute.
+ * Get the value for the 'srcset' attribute.
  *
- * @param int $id 			Image attacment ID.
+ * @param int $id 			Image attachment ID.
  * @param string $size	Optional. Name of image size. Default value: 'thumbnail'.
- * @return string|bool 	A full 'srcset' string or false.
+ * @return string|bool 	A 'srcset' value string or false.
  */
-function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
+function tevkori_get_srcset( $id, $size = 'thumbnail' ) {
 	$srcset_array = tevkori_get_srcset_array( $id, $size );
 	if ( empty( $srcset_array ) ) {
 		return false;
 	}
-	return 'srcset="' . implode( ', ', $srcset_array ) . '"';
+	return implode( ', ', $srcset_array );
+}
+
+/**
+ * Create a 'srcset' attribute.
+ *
+ * @param int $id 			Image attachment ID.
+ * @param string $size	Optional. Name of image size. Default value: 'thumbnail'.
+ * @return string|bool 	A full 'srcset' string or false.
+ */
+function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
+	$srcset_value = tevkori_get_srcset( $id, $size );
+	if ( empty( $srcset_value ) ) {
+		return false;
+	}
+	return 'srcset="' . $srcset_value . '"';
 }
 
 /**
@@ -239,28 +254,30 @@ function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $
 add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
 
 /**
- * Filter to add srcset attributes to post_thumbnails
+ * Filter to add srcset and sizes attributes to post_thumbnails and gallery images.
  *
- * @see 'post_thumbnail_html'
- * @return string HTML for image.
+ * @see 'wp_get_attachment_image_attributes'
+ * @return array attributes for image.
  */
-function tevkori_filter_post_thumbnail_html( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
-	// if the HTML is empty, short circuit
-	if ( '' === $html ) {
-		return;
+function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size ) {
+    $attachment_id = $attachment->ID;
+    
+	if ( ! isset( $attr['sizes'] ) ) {
+		$sizes = tevkori_get_sizes( $attachment_id, $size );
+		// Build the sizes attribute if sizes were returned.
+		if ( $sizes ) {
+			$attr['sizes'] = $sizes;
+		}
 	}
-
-	$sizes = tevkori_get_sizes( $post_thumbnail_id, $size );
-	// Build the data-sizes attribute if sizes were returned.
-	if ( $sizes ) {
-		$sizes = 'sizes="' . $sizes . '"';
+	
+	if ( ! isset( $attr['srcset'] ) ) {
+		$srcset = tevkori_get_srcset( $attachment_id, $size );
+		$attr['srcset'] = $srcset;
 	}
-
-	$srcset = tevkori_get_srcset_string( $post_thumbnail_id, $size );
-	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1 ' . $sizes . ' ' . $srcset, $html );
-	return $html;
+	
+    return $attr;
 }
-add_filter( 'post_thumbnail_html', 'tevkori_filter_post_thumbnail_html', 0, 5);
+add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 4 );
 
 /**
  * Disable the editor size constraint applied for images in TinyMCE.
