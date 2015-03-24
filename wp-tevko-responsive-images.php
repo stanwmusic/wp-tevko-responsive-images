@@ -21,7 +21,7 @@ defined('ABSPATH') or die("No script kiddies please!");
  * Enqueue bundled version of the Picturefill library
  */
 function tevkori_get_picturefill() {
-	wp_enqueue_script( 'picturefill', plugins_url( 'js/picturefill.min.js', __FILE__ ), array(), '2.2.0', true );
+	wp_enqueue_script( 'picturefill', plugins_url( 'js/picturefill.min.js', __FILE__ ), array(), '2.3.0', true );
 }
 add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
 
