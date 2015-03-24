@@ -7,7 +7,6 @@ Tested up to: 4.1
 Stable tag: 2.2.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
-Plugin URI: https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images
 
 Bringing automatic default responsive images to WordPress.
 
