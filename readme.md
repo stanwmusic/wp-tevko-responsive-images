@@ -111,9 +111,18 @@ The only external dependency included in this plugin is Picturefill - v2.3.0. If
 
 ##Version
 
-2.1.1
+2.2.0
 
 ##Changelog
+
+- The mandatory sizes attribute is now included on all images
+- Updated to Picturefill v2.3.0
+- Extensive documentation included in readme
+- Integrated testing with Travis CLI
+- Check if wp.media exists before running JS
+- Account for rounding variance when matching ascpect ratios
+
+** 2.1.1 **
 
 - Adding in wp-tevko-responsive-images.js after file not found to be in wordpress repository
 - Adjusts the aspect ratio check in tevkori_get_srcset_array() to account for rounding variance
