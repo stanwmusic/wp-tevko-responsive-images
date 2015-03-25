@@ -111,9 +111,13 @@ The only external dependency included in this plugin is Picturefill - v2.3.0. If
 
 ##Version
 
-2.2.0
+2.2.1
 
 ##Changelog
+
+- JS patch for wordpress
+
+**2.2.0**
 
 - The mandatory sizes attribute is now included on all images
 - Updated to Picturefill v2.3.0
