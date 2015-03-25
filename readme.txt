@@ -4,7 +4,7 @@ Donate link: https://app.etapestry.com/hosted/BoweryResidentsCommittee/OnlineDon
 Tags: Responsive, Images, Responsive Images, SRCSET, Picturefill
 Requires at least: 4.1
 Tested up to: 4.1
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -24,6 +24,9 @@ This plugin works by including all available image sizes for each image upload. 
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog ==
+= 2.2.1 =
+* Patch fixing missing javascript error
+
 = 2.2.0 =
 * The mandatory sizes attribute is now included on all images
 * Updated to Picturefill v2.3.0
