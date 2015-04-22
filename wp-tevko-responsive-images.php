@@ -43,14 +43,13 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * @return string|bool A valid source size value for use in a 'sizes' attribute or false.
  */
 function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
-	
-	// See which image is being returned and bail if none is found.
-	if ( ! $image = image_downsize( $id, $size ) ) {
+	// See which image is being returned and bail if none is found
+	if ( ! $img = image_downsize( $id, $size ) ) {
 		return false;
 	};
 
-	// Get the image width.
-	$img_width = $image[1] . 'px';
+	// Get the image width
+	$img_width = $img[1] . 'px';
 
 	// Set up our default values.
 	$defaults = array(
@@ -71,14 +70,14 @@ function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
 	// If sizes is passed as a string, just use the string.
 	if ( is_string( $args['sizes'] ) ) {
 		$size_list = $args['sizes'];
-	
+
 	// Otherwise, breakdown the array and build a sizes string.
 	} elseif ( is_array( $args['sizes'] ) ) {
 
 		$size_list = '';
 
 		foreach ( $args['sizes'] as $size ) {
-			
+
 			// Use 100vw as the size value unless something else is specified.
 			$size_value = ( $size['size_value'] ) ? $size['size_value'] : '100vw';
 
@@ -94,7 +93,7 @@ function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
 				$media_query = '(' . $media_condition . ": " . $media_length . ') ';
 
 			} else {
-				
+
 				// If not meda length was set, $media_query is blank.
 				$media_query = '';
 			}
@@ -144,45 +143,45 @@ function tevkori_get_sizes_string( $id, $size = 'thumbnail', $args = null ) {
 function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	$arr = array();
 
-	// See which image is being returned and bail if none is found.
-	if ( ! $image = wp_get_attachment_image_src( $id, $size ) ) {
+	// See which image is being returned and bail if none is found
+	if ( ! $img = wp_get_attachment_image_src( $id, $size ) ) {
 		return false;
 	};
 
-	// Break image data into url, width, and height.
-	list( $img_url, $img_width, $img_height ) = $image;
+	// break image data into url, width, and height
+	list( $img_url, $img_width, $img_height ) = $img;
 
-	// Get the image meta data.
-	$image_meta = wp_get_attachment_metadata( $id );
+	// image meta
+	$img_meta = wp_get_attachment_metadata( $id );
 
-	// Build an array with default sizes.
-	$default_sizes = $image_meta['sizes'];
+	// Build an array with image sizes.
+	$img_sizes = $img_meta['sizes'];
 
-	// Add full size to the default_sizes array.
-	$default_sizes['full'] = array(
-		'width' 	=> $image_meta['width'],
-		'height'	=> $image_meta['height'],
-		'file'		=> substr( $image_meta['file'], strrpos( $image_meta['file'], '/' ) + 1 )
+	// Add full size to the img_sizes array.
+	$img_sizes['full'] = array(
+		'width'  => $img_meta['width'],
+		'height' => $img_meta['height'],
+		'file'   => substr( $img_meta['file'], strrpos( $img_meta['file'], '/' ) + 1 )
 	);
-	
+
 	// Get the image base url.
 	$img_base_url = substr( $img_url, 0, strrpos( $img_url, '/' ) + 1 );
-	
+
 	// Calculate the image aspect ratio.
 	$img_ratio = $img_height / $img_width;
 
-	// Only use sizes with same aspect ratio.
-	foreach ( $default_sizes as $key => $image_size ) {
+	// Only use sizes with same aspect ratio
+	foreach ( $img_sizes as $img_size => $img ) {
 
-		// Calculate the height we would expect if this is a soft crop given the size width.
-		$soft_height = (int) round( $image_size['width'] * $img_ratio );
+		// Calculate the height we would expect if the image size has the same aspect ratio.
+		$expected_height = (int) round( $img['width'] * $img_ratio );
 
 		// If image height doesn't varies more than 2px over the expected, use it.
-		if ( $image_size['height'] >= $soft_height - 2 && $image_size['height'] <= $soft_height + 2  ) {
-			$arr[] = $img_base_url . $image_size['file'] . ' ' . $image_size['width'] .'w';
+		if ( $img['height'] >= $expected_height - 2 && $img['height'] <= $expected_height + 2  ) {
+			$arr[] = $img_base_url . $img['file'] . ' ' . $img['width'] .'w';
 		}
 	}
-	
+
 	if ( empty( $arr ) ) {
 		return false;
 	}
@@ -201,11 +200,11 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
  */
 function tevkori_get_srcset( $id, $size = 'thumbnail' ) {
 	$srcset_array = tevkori_get_srcset_array( $id, $size );
-	
+
 	if ( empty( $srcset_array ) ) {
 		return false;
 	}
-	
+
 	return implode( ', ', $srcset_array );
 }
 
@@ -220,11 +219,11 @@ function tevkori_get_srcset( $id, $size = 'thumbnail' ) {
  */
 function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
 	$srcset_value = tevkori_get_srcset( $id, $size );
-	
+
 	if ( empty( $srcset_value ) ) {
 		return false;
 	}
-	
+
 	return 'srcset="' . $srcset_value . '"';
 }
 
@@ -252,19 +251,19 @@ function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $
 	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
 
 	$sizes = tevkori_get_sizes( $id, $size );
-	
+
 	// Build the data-sizes attribute if sizes were returned.
 	if ( $sizes ) {
 		$sizes = 'data-sizes="' . $sizes . '"';
 	}
-	
+
 	// Build the srcset attribute.
 	$srcset = tevkori_get_srcset_string( $id, $size );
-	
+
 	remove_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
-	
+
 	$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1 ' . $sizes . ' ' . $srcset, $html );
-	
+
 	return $html;
 }
 add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
@@ -277,21 +276,21 @@ add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
  */
 function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size ) {
     $attachment_id = $attachment->ID;
-    
+
 	if ( ! isset( $attr['sizes'] ) ) {
 		$sizes = tevkori_get_sizes( $attachment_id, $size );
-		
+
 		// Build the sizes attribute if sizes were returned.
 		if ( $sizes ) {
 			$attr['sizes'] = $sizes;
 		}
 	}
-	
+
 	if ( ! isset( $attr['srcset'] ) ) {
 		$srcset = tevkori_get_srcset( $attachment_id, $size );
 		$attr['srcset'] = $srcset;
 	}
-	
+
     return $attr;
 }
 add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 4 );
@@ -347,7 +346,7 @@ function tevkori_wp_image_editors( $editors ) {
 	if ( current_theme_supports( 'advanced-image-compression' ) ) {
 		array_unshift( $editors, 'WP_Image_Editor_Respimg' );
 	}
-	
+
 	return $editors;
 }
 add_filter( 'wp_image_editors', 'tevkori_wp_image_editors' );
