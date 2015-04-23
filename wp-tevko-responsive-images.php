@@ -309,8 +309,10 @@ add_filter('the_content', 'tevkori_filter_content_sizes');
  *
  * @return array editors
  **/
-function tevkori_wp_image_editors($editors) {
-	array_unshift($editors, 'WP_Image_Editor_Respimg');
+function tevkori_wp_image_editors( $editors ) {
+	if ( current_theme_supports( 'advanced-image-compression' ) ) {
+		array_unshift( $editors, 'WP_Image_Editor_Respimg' );
+	}
 	return $editors;
 }
 add_filter('wp_image_editors', 'tevkori_wp_image_editors');
