@@ -136,6 +136,7 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 
 ##Changelog
 
+- Improved performance of `get_srcset_array`
 - Added smart sizes option (available by adding hook to functions.php)
 
 **2.2.1**
