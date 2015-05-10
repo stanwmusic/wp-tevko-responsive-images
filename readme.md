@@ -93,17 +93,16 @@ Returns an array of image source candidates for use in a 'srcset' attribute. The
 ***Usage Example***
 
 ```
-
 $sources = tevkori_get_srcset_array( 11, 'medium' );
 
-$srcset = array();
-foreach( $srcset as $source ) {
- if ( false === strpos(' 900w', $source) {
-  $srcset[] = $source;
- }
+// Optionally remove a specific source from the srcset list.
+foreach( $sources as $key => $source ) {
+	if ( strpos( $source, '300w' ) ) {
+		unset( $s[$key] );
+	}
 }
 
-<img src="myimg.png" srcset="<?php implode( ', ', $srcset ); ?>" >
+<img src="myimg.png" srcset="<?php implode( ', ', $sources ); ?>" >
 ```
 
 ---
