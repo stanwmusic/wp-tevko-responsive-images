@@ -44,12 +44,13 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * @return string|bool A valid source size value for use in a 'sizes' attribute or false.
  */
 function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
-	// See which image is being returned and bail if none is found
+	
+	// See which image is being returned and bail if none is found.
 	if ( ! $img = image_downsize( $id, $size ) ) {
 		return false;
 	};
 
-	// Get the image width
+	// Get the image width.
 	$img_width = $img[1] . 'px';
 
 	// Set up our default values.
@@ -144,15 +145,15 @@ function tevkori_get_sizes_string( $id, $size = 'thumbnail', $args = null ) {
 function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	$arr = array();
 
-	// See which image is being returned and bail if none is found
+	// See which image is being returned and bail if none is found.
 	if ( ! $img = wp_get_attachment_image_src( $id, $size ) ) {
 		return false;
 	};
 
-	// break image data into url, width, and height
+	// Break image data into url, width, and height.
 	list( $img_url, $img_width, $img_height ) = $img;
 
-	// image meta
+	// Get the image meta data.
 	$img_meta = wp_get_attachment_metadata( $id );
 
 	// Build an array with image sizes.
@@ -171,7 +172,7 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	// Calculate the image aspect ratio.
 	$img_ratio = $img_height / $img_width;
 
-	// Only use sizes with same aspect ratio
+	// Only use sizes with same aspect ratio.
 	foreach ( $img_sizes as $img_size => $img ) {
 
 		// Calculate the height we would expect if the image size has the same aspect ratio.
@@ -276,7 +277,7 @@ add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
  * @return array Attributes for image.
  */
 function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size ) {
-    $attachment_id = $attachment->ID;
+	$attachment_id = $attachment->ID;
 
 	if ( ! isset( $attr['sizes'] ) ) {
 		$sizes = tevkori_get_sizes( $attachment_id, $size );
@@ -292,7 +293,7 @@ function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size )
 		$attr['srcset'] = $srcset;
 	}
 
-    return $attr;
+	return $attr;
 }
 add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 4 );
 
