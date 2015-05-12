@@ -1,7 +1,5 @@
 <?php
 defined( 'ABSPATH' ) or die( "No script kiddies please!" );
-require_once plugin_dir_path( __FILE__ ) . 'class-respimg.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-wp-image-editor-respimg.php';
 
 /**
  * @link              https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images
@@ -19,6 +17,9 @@ require_once plugin_dir_path( __FILE__ ) . 'class-wp-image-editor-respimg.php';
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
+// List includes
+require_once plugin_dir_path( __FILE__ ) . 'class-respimg.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-wp-image-editor-respimg.php';
 
 /**
  * Enqueue bundled version of the Picturefill library.
