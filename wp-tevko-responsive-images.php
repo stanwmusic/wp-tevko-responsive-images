@@ -44,7 +44,7 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * @return string|bool A valid source size value for use in a 'sizes' attribute or false.
  */
 function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
-	
+
 	// See which image is being returned and bail if none is found.
 	if ( ! $img = image_downsize( $id, $size ) ) {
 		return false;
@@ -352,3 +352,23 @@ function tevkori_wp_image_editors( $editors ) {
 	return $editors;
 }
 add_filter( 'wp_image_editors', 'tevkori_wp_image_editors' );
+
+
+function tevkori_ajax_srcset() {
+
+	// Bail early if no post ID is passed.
+	if ( ! $postID = $_POST['postID'] ) {
+		return;
+	};
+
+	// Grab the image size being passed from the AJAX request.
+	$size = $_POST['size'];
+
+	// Get the srcset value for our image.
+	$srcset = tevkori_get_srcset( $postID, $size );
+
+	// For AJAX requests, we echo the result and then die.
+	echo $srcset;
+	die();
+}
+add_action( 'wp_ajax_tevkori_ajax_srcset', 'tevkori_ajax_srcset' );
