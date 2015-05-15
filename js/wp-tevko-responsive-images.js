@@ -11,15 +11,11 @@
 			var image = args.image,
 				metadata = args.metadata;
 
-			// if the image url has changed, recalculate srcset attributes
+			// If the image url has changed, recalculate srcset attributes.
 			if ( metadata && metadata.url !== metadata.originalUrl ) {
-				// we need to get the postdata for the image because
-				// the sizes array isn't passed into the editor
-
-				// Update the srcset attribute
+				// Update the srcset attribute.
 				updateSrcset( image, metadata );
-
-				// Update the sizes attribute
+				// Update the sizes attribute.
 				updateSizes( image, metadata );
 			}
 
@@ -49,7 +45,7 @@
 
 		var sizes = '(max-width: ' + metadata.width + 'px) 100vw, ' + metadata.width + 'px';
 
-		// update the sizes attribute of our image
+		// Update the sizes attribute of our image.
 		image.setAttribute( 'data-sizes', sizes );
 	}
 
