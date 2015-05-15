@@ -353,7 +353,13 @@ function tevkori_wp_image_editors( $editors ) {
 }
 add_filter( 'wp_image_editors', 'tevkori_wp_image_editors' );
 
-
+/**
+ * Ajax handler for updating the srcset when an image is changed in the editor.
+ *
+ * @since 2.3.0
+ *
+ * @return string A sourcest value.
+ */
 function tevkori_ajax_srcset() {
 
 	// Bail early if no post ID is passed.
