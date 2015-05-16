@@ -36,7 +36,7 @@
 		jQuery.post( ajaxurl, data, function( response ) {
 			image.setAttribute( 'srcset', response );
 		});
-	}
+	};
 
 	/**
 	 * Update the data-sizes attribute on an image in the editor
@@ -47,7 +47,7 @@
 
 		// Update the sizes attribute of our image.
 		image.setAttribute( 'data-sizes', sizes );
-	}
+	};
 
 
 })();
