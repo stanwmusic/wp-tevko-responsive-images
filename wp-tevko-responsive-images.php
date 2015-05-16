@@ -352,3 +352,29 @@ function tevkori_wp_image_editors( $editors ) {
 	return $editors;
 }
 add_filter( 'wp_image_editors', 'tevkori_wp_image_editors' );
+
+/**
+ * Ajax handler for updating the srcset when an image is changed in the editor.
+ *
+ * @since 2.3.0
+ *
+ * @return string A sourcest value.
+ */
+function tevkori_ajax_srcset() {
+
+	// Bail early if no post ID is passed.
+	if ( ! $postID = $_POST['postID'] ) {
+		return;
+	};
+
+	// Grab the image size being passed from the AJAX request.
+	$size = $_POST['size'];
+
+	// Get the srcset value for our image.
+	$srcset = tevkori_get_srcset( $postID, $size );
+
+	// For AJAX requests, we echo the result and then die.
+	echo $srcset;
+	die();
+}
+add_action( 'wp_ajax_tevkori_ajax_srcset', 'tevkori_ajax_srcset' );
