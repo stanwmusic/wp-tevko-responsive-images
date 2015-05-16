@@ -374,7 +374,6 @@ function tevkori_ajax_srcset() {
 	$srcset = tevkori_get_srcset( $postID, $size );
 
 	// For AJAX requests, we echo the result and then die.
-	echo $srcset;
-	die();
+	wp_send_json( $srcset );
 }
 add_action( 'wp_ajax_tevkori_ajax_srcset', 'tevkori_ajax_srcset' );
