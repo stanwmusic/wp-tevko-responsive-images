@@ -295,7 +295,7 @@ function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size )
 
 	return $attr;
 }
-add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 4 );
+add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 3 );
 
 /**
  * Disable the editor size constraint applied for images in TinyMCE.
