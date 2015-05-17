@@ -137,6 +137,12 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 
 - Improved performance of `get_srcset_array`
 - Added smart sizes option (available by adding hook to functions.php)
+- Duplicate entires now filtered out from srcset array
+- Upgrade picturefill to 2.3.1
+- Refactoring plugin JS, including a switch to ajax for updating the srcset value when the image is changed in the editor
+- Now using wp_get_attachment_image_attributes filter for post thumbnails
+- Readme and other general code typo fixes
+- Gallery images will now contain a srcset attribute
 
 **2.2.1**
 
