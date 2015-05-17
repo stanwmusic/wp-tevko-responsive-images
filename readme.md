@@ -136,7 +136,7 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 ##Changelog
 
 - Improved performance of `get_srcset_array`
-- Added smart sizes option (available by adding hook to functions.php)
+- Added advanced image compresson option (available by adding hook to functions.php)
 - Duplicate entires now filtered out from srcset array
 - Upgrade picturefill to 2.3.1
 - Refactoring plugin JS, including a switch to ajax for updating the srcset value when the image is changed in the editor
