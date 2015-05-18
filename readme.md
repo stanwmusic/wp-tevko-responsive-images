@@ -136,9 +136,9 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 ##Changelog
 
 - Improved performance of `get_srcset_array`
-- Added advanced image compresson option (available by adding hook to functions.php)
+- Added advanced image compression option (available by adding hook to functions.php)
 - Duplicate entires now filtered out from srcset array
-- Upgrade picturefill to 2.3.1
+- Upgrade Picturefill to 2.3.1
 - Refactoring plugin JS, including a switch to ajax for updating the srcset value when the image is changed in the editor
 - Now using wp_get_attachment_image_attributes filter for post thumbnails
 - Readme and other general code typo fixes
@@ -146,7 +146,7 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 
 **2.2.1**
 
-- JS patch for wordpress
+- JS patch for WordPress
 
 **2.2.0**
 
