@@ -163,8 +163,11 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	$img_sizes['full'] = array(
 		'width'  => $img_meta['width'],
 		'height' => $img_meta['height'],
-		'file'   => substr( $img_meta['file'], strrpos( $img_meta['file'], '/' ) + 1 )
+		'file'   => $img_meta['file'] 
 	);
+	if ( strrpos( $img_meta['file'], '/' ) !== false ) {
+		$img_sizes['full']['file'] = substr( $img_meta['file'], strrpos( $img_meta['file'], '/' ) + 1 );
+	}
 
 	// Get the image base url.
 	$img_base_url = substr( $img_url, 0, strrpos( $img_url, '/' ) + 1 );
