@@ -3,7 +3,7 @@ Contributors: tevko, wilto, chriscoyier, joemcgill, Michael McGinnis, ryelle, dr
 Donate link: https://app.etapestry.com/hosted/BoweryResidentsCommittee/OnlineDonation.html
 Tags: Responsive, Images, Responsive Images, SRCSET, Picturefill
 Requires at least: 4.1
-Tested up to: 4.1
+Tested up to: 4.2.2
 Stable tag: 2.3.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
