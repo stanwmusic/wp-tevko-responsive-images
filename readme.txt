@@ -29,7 +29,7 @@ This plugin works by including all available image sizes for each image upload. 
 * Improved performance of get_srcset_array
 * Added advanced image compression option (available by adding hook to functions.php)
 * Duplicate entires now filtered out from srcset array
-* Upgrade picturefill to 2.3.1
+* Upgrade Picturefill to 2.3.1
 * Refactoring plugin JS, including a switch to ajax for updating the srcset value when the image is changed in the editor
 * Now using wp_get_attachment_image_attributes filter for post thumbnails
 * Readme and other general code typo fixes
