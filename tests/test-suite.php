@@ -147,6 +147,32 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertSame( $expected, $sizes );
 	}
 
+	function test_tevkori_get_srcset_array_no_date_upoads() {
+		// Save the current setting for uploads folders
+		$uploads_use_yearmonth_folders = get_option( 'uploads_use_yearmonth_folders' );
+
+		// Disable date organized uploads
+		update_option( 'uploads_use_yearmonth_folders', 0 );
+
+		// make an image
+		$id = $this->_test_img();
+		$sizes = tevkori_get_srcset_array( $id, 'medium' );
+
+		$image = wp_get_attachment_metadata( $id );
+		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
+
+		$expected = array(
+			'http://example.org/wp-content/uploads/' . $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
+			'http://example.org/wp-content/uploads/' . $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w',
+			'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
+		);
+
+		$this->assertSame( $expected, $sizes );
+
+		// Leave the uploads option the way you found it.
+		update_option( 'uploads_use_yearmonth_folders', $uploads_use_yearmonth_folders );
+	}
+
 	function test_tevkori_get_srcset_array_thumb() {
 		// make an image
 		$id = $this->_test_img();
