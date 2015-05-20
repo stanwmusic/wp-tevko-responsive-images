@@ -153,6 +153,11 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	// Break image data into url, width, and height.
 	list( $img_url, $img_width, $img_height ) = $img;
 
+	// If we have no width to work with, we should bail (see issue #118).
+	if ( 0 == $img_width ) {
+		return false;
+	}
+
 	// Get the image meta data.
 	$img_meta = wp_get_attachment_metadata( $id );
 
