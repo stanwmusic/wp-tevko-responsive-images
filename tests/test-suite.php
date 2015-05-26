@@ -171,6 +171,28 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertFalse( $sizes );
 	}
 
+	function test_tevkori_get_srcset_array_no_width() {
+		// Filter image_downsize() output.
+		add_filter( 'image_downsize', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
+
+		// Make our attachement.
+		$id = $this->_test_img();
+		$srcset = tevkori_get_srcset_array( $id, 'medium' );
+
+		// The srcset should be false
+		$this->assertFalse( $srcset );
+
+		// Remove filter.
+		remove_filter( 'image_downsize', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
+	}
+
+	/**
+	 * Helper funtion to filter image_downsize and return zero values for width and height.
+	 */
+	public function _test_tevkori_get_srcset_array_no_width_filter() {
+		return array( 'http://example.org/foo.jpg', 0, 0, false );
+	}
+
 	function test_tevkori_get_srcset_string() {
 		// make an image
 		$id = $this->_test_img();
