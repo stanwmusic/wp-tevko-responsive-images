@@ -147,6 +147,32 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertSame( $expected, $sizes );
 	}
 
+	function test_tevkori_get_srcset_array_no_date_upoads() {
+		// Save the current setting for uploads folders
+		$uploads_use_yearmonth_folders = get_option( 'uploads_use_yearmonth_folders' );
+
+		// Disable date organized uploads
+		update_option( 'uploads_use_yearmonth_folders', 0 );
+
+		// make an image
+		$id = $this->_test_img();
+		$sizes = tevkori_get_srcset_array( $id, 'medium' );
+
+		$image = wp_get_attachment_metadata( $id );
+		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
+
+		$expected = array(
+			'http://example.org/wp-content/uploads/' . $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
+			'http://example.org/wp-content/uploads/' . $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w',
+			'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
+		);
+
+		$this->assertSame( $expected, $sizes );
+
+		// Leave the uploads option the way you found it.
+		update_option( 'uploads_use_yearmonth_folders', $uploads_use_yearmonth_folders );
+	}
+
 	function test_tevkori_get_srcset_array_thumb() {
 		// make an image
 		$id = $this->_test_img();
@@ -169,6 +195,28 @@ class SampleTest extends WP_UnitTestCase {
 
 		// For canola.jpg we should return
 		$this->assertFalse( $sizes );
+	}
+
+	function test_tevkori_get_srcset_array_no_width() {
+		// Filter image_downsize() output.
+		add_filter( 'image_downsize', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
+
+		// Make our attachement.
+		$id = $this->_test_img();
+		$srcset = tevkori_get_srcset_array( $id, 'medium' );
+
+		// The srcset should be false
+		$this->assertFalse( $srcset );
+
+		// Remove filter.
+		remove_filter( 'image_downsize', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
+	}
+
+	/**
+	 * Helper funtion to filter image_downsize and return zero values for width and height.
+	 */
+	public function _test_tevkori_get_srcset_array_no_width_filter() {
+		return array( 'http://example.org/foo.jpg', 0, 0, false );
 	}
 
 	function test_tevkori_get_srcset_string() {
