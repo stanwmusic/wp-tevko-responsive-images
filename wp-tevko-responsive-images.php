@@ -158,8 +158,10 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 		return false;
 	}
 
-	// Get the image meta data.
-	$img_meta = wp_get_attachment_metadata( $id );
+	// Get the image meta data and bail if none is found.
+	if ( ! is_array( $img_meta = wp_get_attachment_metadata( $id ) ) ) {
+		return false;
+	};
 
 	// Build an array with image sizes.
 	$img_sizes = $img_meta['sizes'];
