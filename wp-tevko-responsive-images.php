@@ -69,6 +69,17 @@ function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
 
 	$args = wp_parse_args( $args, $defaults );
 
+	/**
+	* Filter arguments used to create sizes attribute.
+	*
+	* @since 2.4.0
+	*
+	* @param array   $args  An array of arguments used to create a sizes attribute.
+	* @param int     $id    Post ID of the original image.
+	* @param string  $size  Name of the image size being used.
+	*/
+	$args = apply_filters( 'tevkori_image_sizes_args', $args, $id, $size );
+
 	// If sizes is passed as a string, just use the string.
 	if ( is_string( $args['sizes'] ) ) {
 		$size_list = $args['sizes'];

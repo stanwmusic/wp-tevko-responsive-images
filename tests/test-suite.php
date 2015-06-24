@@ -115,6 +115,28 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertSame($expected, $sizes);
 	}
 
+	function test_filter_tevkori_get_sizes_string() {
+		// Add our test filter.
+		add_filter( 'tevkori_image_sizes_args', array( $this, '_test_tevkori_image_sizes_args' ) );
+
+		// Set up our test.
+		$id = $this->_test_img();
+		$sizes = tevkori_get_sizes($id, 'medium');
+
+		// Evaluate that the sizes returned is what we expected.
+		$this->assertSame( $sizes, '100vm');
+
+		remove_filter( 'tevkori_image_sizes_args', array( $this, '_test_tevkori_image_sizes_args' ) );
+	}
+
+	/**
+	 * A simple test filter for tevkori_get_sizes().
+	 */
+	function _test_tevkori_image_sizes_args( $args ) {
+		$args['sizes'] = "100vm";
+		return $args;
+	}
+
 	function test_tevkori_get_sizes_string() {
 		// make an image
 		$id = $this->_test_img();
