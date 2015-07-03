@@ -196,11 +196,11 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	// Only use sizes with same aspect ratio.
 	foreach ( $img_sizes as $img_size => $img ) {
 
-		// Calculate the height we would expect if the image size has the same aspect ratio.
-		$expected_height = (int) round( $img['width'] * $img_ratio );
+		// Calculate the new image ratio
+		$img_ratio_compare = $img['height'] / $img['width'];
 
-		// If image height doesn't varies more than 2px over the expected, use it.
-		if ( $img['height'] >= $expected_height - 2 && $img['height'] <= $expected_height + 2  ) {
+		// If the new ratio differs by less than 0.01, use it.
+		if ( abs( $img_ratio - $img_ratio_compare ) < 0.01 ) {
 			$arr[] = $img_base_url . $img['file'] . ' ' . $img['width'] .'w';
 		}
 	}
