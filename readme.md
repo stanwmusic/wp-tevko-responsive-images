@@ -19,15 +19,20 @@ This plugin includes several functions that can be used by theme and plugin deve
 
 ###Advanced Image Compression
 
-**This is an experimental feature, if used, please provide us with feedback!**
+Advanced image compression is an experimental image editor that makes use of ImageMagick's compression setting to deliver deliver higher quality images at a smaller file sizes. As such, **ImageMagick is required for this feature to work**. To learn more about the actual compression settings being used, read Dave Newtons [excellent writeup at Smashing Magazine](http://www.smashingmagazine.com/2015/06/efficient-image-resizing-with-imagemagick/).
 
-This feature turns on advanced compression, which will deliver higher quality images at a smaller file size. To enable, place the following code in your `functions.php` file - 
+To enable, place the following code in your `functions.php` file -
 ```
 function custom_theme_setup() {
 	add_theme_support( 'advanced-image-compression' );
 }
 add_action( 'after_setup_theme', 'custom_theme_setup' );
 ```
+
+***Known issues:***
+* Some people have encountered memory limits when uploading large files with the advanced image compression settings enabled (see [#150](https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/issues/150)).
+
+
 ---
 
 ####tevkori_get_sizes( $id, $size, $args )
