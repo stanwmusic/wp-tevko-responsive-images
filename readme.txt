@@ -25,6 +25,13 @@ This plugin works by including all available image sizes for each image upload. 
 3. If you'd like to enable the advanced image compression feature, Please see the instructions at https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/tree/dev#advanced-image-compression
 
 == Changelog ==
+
+= 2.3.1
+- First char no longer stripped from file name if there's no slash
+- Adding test for when uploads directory not organized by date
+- Don't calculate a srcset when the image data returns no width
+- Add test for image_downsize returning 0 as a width
+
 = 2.3.0
 * Improved performance of get_srcset_array
 * Added advanced image compression option (available by adding hook to functions.php)
