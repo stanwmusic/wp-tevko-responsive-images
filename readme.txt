@@ -1,5 +1,5 @@
 === RICG Responsive Images ===
-Contributors: tevko, wilto, chriscoyier, joemcgill, Michael McGinnis, ryelle, drrobotnik, nacin , georgestephanis, helen, wordpressdotorg, Bocoup
+Contributors: tevko, wilto, joemcgill, jaspermdegroot, chriscoyier, Michael McGinnis, ryelle, drrobotnik, nacin , georgestephanis, helen, wordpressdotorg, Bocoup
 Donate link: https://app.etapestry.com/hosted/BoweryResidentsCommittee/OnlineDonation.html
 Tags: Responsive, Images, Responsive Images, SRCSET, Picturefill
 Requires at least: 4.1
