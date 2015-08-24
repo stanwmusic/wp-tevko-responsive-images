@@ -1,6 +1,4 @@
 <?php
-defined( 'ABSPATH' ) or die( "No script kiddies please!" );
-
 /**
  * @link              https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images
  * @since             2.0.0
@@ -16,6 +14,9 @@ defined( 'ABSPATH' ) or die( "No script kiddies please!" );
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
+
+// Don't load the plugin directly
+defined( 'ABSPATH' ) or die( "No script kiddies please!" );
 
 // List includes
 if ( class_exists( 'Imagick' ) ) {
