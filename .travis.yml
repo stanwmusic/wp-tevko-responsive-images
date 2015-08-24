@@ -22,3 +22,5 @@ script: phpunit
 
 notifications:
   email: false
+  
+sudo: false
