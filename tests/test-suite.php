@@ -195,20 +195,14 @@ class SampleTest extends WP_UnitTestCase {
 		update_option( 'uploads_use_yearmonth_folders', $uploads_use_yearmonth_folders );
 	}
 
-	function test_tevkori_get_srcset_array_thumb() {
+	function test_tevkori_get_srcset_array_single_srcset() {
 		// make an image
 		$id = $this->_test_img();
 		$sizes = tevkori_get_srcset_array( $id, 'thumbnail' );
 
 		$image = wp_get_attachment_metadata( $id );
 
-		$year_month = date('Y/m');
-		$expected = array(
-			$image['sizes']['thumbnail']['width'] => 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
-				. $image['sizes']['thumbnail']['file'] . ' ' . $image['sizes']['thumbnail']['width'] . 'w',
-		);
-
-		$this->assertSame( $expected, $sizes );
+		$this->assertFalse( $sizes );
 	}
 
 	function test_tevkori_get_srcset_array_false() {		// make an image
