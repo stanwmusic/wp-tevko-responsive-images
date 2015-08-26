@@ -135,9 +135,26 @@ The only external dependency included in this plugin is [Picturefill](http://sco
 We use a hook because if you attempt to dequeue a script before it's enqueued, wp_dequeue_script has no effect. (If it's still being loaded, you may need to specify a [priority](http://codex.wordpress.org/Function_Reference/add_action).)
 
 ## Version
-2.3.1
+2.4.0
 
 ## Changelog
+
+- Added filter for tevkori_get_sizes, with tests
+- Added Composer support
+- Compare aspect ratio in relative values, not absolute values
+- Cleanup of code style and comments added
+- Added PHP 5.2 to our Travis test matrix
+- Fixed unit test loading
+- Preventing duplicates in srcset array
+- Updated docs for advanced image compression
+- Formatting cleanup in readme.md
+- Bump plugin 'Tested up to:' value to 4.3
+- Remove extra line from readme.txt
+- Added changelog items from 2.3.1 to the readme.txt file
+- Added 'sudo: false' to travis.ci to use new TravisCI infrastructure
+- Removing the srcset and sizes attributes if there is only one source present for the image
+
+**2.3.1**
 
 - First char no longer stripped from file name if there's no slash
 - Adding test for when uploads directory not organized by date
