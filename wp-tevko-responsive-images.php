@@ -314,24 +314,15 @@ add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
  * @return array Attributes for image.
  */
 function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size ) {
-	if ( ! isset( $attr['sizes'] ) ) {
-		$sizes = tevkori_get_sizes( $attachment->ID, $size );
-
-		// Set the sizes attribute if sizes were returned.
-		if ( $sizes ) {
-			$attr['sizes'] = $sizes;
-		}
-	}
-
 	if ( ! isset( $attr['srcset'] ) ) {
-		$srcset = tevkori_get_srcset( $attachment_id, $size );
+		$srcset = tevkori_get_srcset( $attachment->ID, $size );
 
 		// Set the srcset attribute if one was returned.
 		if ( $srcset ) {
 			$attr['srcset'] = $srcset;
 
 			if ( ! isset( $attr['sizes'] ) ) {
-				$sizes = tevkori_get_sizes( $attachment_id, $size );
+				$sizes = tevkori_get_sizes( $attachment->ID, $size );
 
 				// Set the sizes attribute if sizes were returned.
 				if ( $sizes ) {
