@@ -27,26 +27,26 @@ This plugin works by including all available image sizes for each image upload. 
 == Changelog ==
 
 = 2.4.0 =
-- Added filter for tevkori_get_sizes, with tests
-- Added Composer support
-- Compare aspect ratio in relative values, not absolute values
-- Cleanup of code style and comments added
-- Added PHP 5.2 to our Travis test matrix
-- Fixed unit test loading
-- Preventing duplicates in srcset array
-- Updated docs for advanced image compression 
-- Formatting cleanup in readme.md
-- Bump plugin 'Tested up to:' value to 4.3
-- Remove extra line from readme.txt
-- Added changelog items from 2.3.1 to the readme.txt file
-- Added 'sudo: false' to travis.ci to use new TravisCI infrastructure
-- Removing the srcset and sizes attributes if there is only one source present for the image
+* Added filter for tevkori_get_sizes, with tests
+* Added Composer support
+* Compare aspect ratio in relative values, not absolute values
+* Cleanup of code style and comments added
+* Added PHP 5.2 to our Travis test matrix
+* Fixed unit test loading
+* Preventing duplicates in srcset array
+* Updated docs for advanced image compression
+* Formatting cleanup in readme.md
+* Bump plugin 'Tested up to:' value to 4.3
+* Remove extra line from readme.txt
+* Added changelog items from 2.3.1 to the readme.txt file
+* Added 'sudo: false' to travis.ci to use new TravisCI infrastructure
+* Removing the srcset and sizes attributes if there is only one source present for the image
 
-= 2.3.1 = 
-- First char no longer stripped from file name if there's no slash
-- Adding test for when uploads directory not organized by date
-- Don't calculate a srcset when the image data returns no width
-- Add test for image_downsize returning 0 as a width
+= 2.3.1 =
+* First char no longer stripped from file name if there's no slash
+* Adding test for when uploads directory not organized by date
+* Don't calculate a srcset when the image data returns no width
+* Add test for image_downsize returning 0 as a width
 
 = 2.3.0 =
 * Improved performance of get_srcset_array
@@ -74,20 +74,20 @@ This plugin works by including all available image sizes for each image upload. 
 * Adjusts the aspect ratio check in tevkori_get_srcset_array() to account for rounding variance
 
 = 2.1.0 =
- * **This version introduces a breaking change** - there are now two functions. One returns an array of srcset values, and the other returns a string with the `srcset=".."` html needed to generate the responsive image. To retrieve the srcset array, us `tevkori_get_srcset_array( $id, $size )`
- * When the image size is changed in the post editor, the srcset values will adjust to match the change.
+* **This version introduces a breaking change** - there are now two functions. One returns an array of srcset values, and the other returns a string with the `srcset=".."` html needed to generate the responsive image. To retrieve the srcset array, us `tevkori_get_srcset_array( $id, $size )`
+* When the image size is changed in the post editor, the srcset values will adjust to match the change.
 
 = 2.0.2 =
- * A bugfix correcting a divide by zero error. Some users may have seen this after upgrading to 2.0.1
+* A bugfix correcting a divide by zero error. Some users may have seen this after upgrading to 2.0.1
 
 = 2.0.1 =
- * Only outputs the default WordPress sizes, giving theme developers the option to extend as needed
- * Added support for featured images
+* Only outputs the default WordPress sizes, giving theme developers the option to extend as needed
+* Added support for featured images
 
 = 2.0.0 =
- * Uses [Picturefill 2.2.0 (Beta)](http://scottjehl.github.io/picturefill/)
- * Scripts are output to footer
- * Image sizes adjusted
- * Most importantly, the srcset syntax is being used
- - Works for cropped images!
- - Backwards compatible (images added before plugin install will still be responsive)!
+* Uses [Picturefill 2.2.0 (Beta)](http://scottjehl.github.io/picturefill/)
+* Scripts are output to footer
+* Image sizes adjusted
+* Most importantly, the srcset syntax is being used
+* Works for cropped images!
+* Backwards compatible (images added before plugin install will still be responsive)!

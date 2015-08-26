@@ -7,6 +7,10 @@ Bringing automatic default responsive images to WordPress.
 
 This plugin works by including all available image sizes for each image upload. Whenever WordPress outputs the image through the media uploader, or whenever a featured image is generated, those sizes will be included in the image tag via the [srcset](http://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/) attribute.
 
+## Contribution Guidelines
+
+Please submit pull requests to our dev branch. If your contribution requires such, please aim to include appropriate tests with your pr as well.
+
 ## Documentation
 
 ### For General Users
