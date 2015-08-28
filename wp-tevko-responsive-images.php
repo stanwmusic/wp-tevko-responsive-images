@@ -209,10 +209,21 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	// Calculate the image aspect ratio.
 	$img_ratio = $img_height / $img_width;
 
-	// Only use sizes with same aspect ratio.
+	// Images that have been edited in WordPres after being uploaded will
+	// contain a unique hash. We look for that hash and use it later to filter
+	// out images that are left overs from previous renditions.
+	$img_edited = preg_match( '/-e[0-9]{13}/', $img_url, $img_edit_hash );
+
+	// Loop through available images and only use images that are resized
+	// versions of the same rendition.
 	foreach ( $img_sizes as $img ) {
 
-		// Calculate the new image ratio
+		// Filter out images that are from different crops.
+		if ( $img_edited && ! strpos( $img['file'], $img_edit_hash[0] ) ) {
+			continue;
+		}
+
+		// Calculate the new image ratio.
 		$img_ratio_compare = $img['height'] / $img['width'];
 
 		// If the new ratio differs by less than 0.01, use it.
