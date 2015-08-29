@@ -218,7 +218,7 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	// versions of the same rendition.
 	foreach ( $img_sizes as $img ) {
 
-		// Filter out images that are from different crops.
+		// Filter out images that are leftovers from previous renditions.
 		if ( $img_edited && ! strpos( $img['file'], $img_edit_hash[0] ) ) {
 			continue;
 		}
