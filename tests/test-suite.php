@@ -156,7 +156,6 @@ class SampleTest extends WP_UnitTestCase {
 
 		$year_month = date('Y/m');
 		$image = wp_get_attachment_metadata( $id );
-		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
 
 		$expected = array(
 			$image['sizes']['medium']['width'] => 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
@@ -181,7 +180,6 @@ class SampleTest extends WP_UnitTestCase {
 		$sizes = tevkori_get_srcset_array( $id, 'medium' );
 
 		$image = wp_get_attachment_metadata( $id );
-		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
 
 		$expected = array(
 			$image['sizes']['medium']['width'] => 'http://example.org/wp-content/uploads/' . $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
@@ -198,9 +196,9 @@ class SampleTest extends WP_UnitTestCase {
 	function test_tevkori_get_srcset_array_single_srcset() {
 		// make an image
 		$id = $this->_test_img();
+		// In our tests, thumbnails would only return a single srcset candidate,
+		// in which case we don't bother returning a srcset array.
 		$sizes = tevkori_get_srcset_array( $id, 'thumbnail' );
-
-		$image = wp_get_attachment_metadata( $id );
 
 		$this->assertFalse( $sizes );
 	}
@@ -240,7 +238,8 @@ class SampleTest extends WP_UnitTestCase {
 		}
 	}
 
-	function test_tevkori_get_srcset_array_false() {		// make an image
+	function test_tevkori_get_srcset_array_false() {
+		// make an image
 		$id = $this->_test_img();
 		$sizes = tevkori_get_srcset_array( 99999, 'foo' );
 
