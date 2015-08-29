@@ -236,6 +236,15 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 		return false;
 	}
 
+	/**
+	 * Filter the output of tevkori_get_srcset_array().
+	 *
+	 * @since 2.4.0
+	 *
+	 * @param array        $arr   An array of image sources.
+	 * @param int          $id    Attachment ID for image.
+	 * @param array|string $size  Size of image, either array or string.
+	 */
 	return apply_filters( 'tevkori_srcset_array', $arr, $id, $size );
 }
 
