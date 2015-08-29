@@ -137,6 +137,36 @@ class SampleTest extends WP_UnitTestCase {
 		return $args;
 	}
 
+	function test_filter_tevkori_srcset_array() {
+		// Add test filter
+		add_filter( 'tevkori_srcset_array', array( $this, '_test_tevkori_srcset_array' ) );
+
+		// Set up our test.
+		$id = $this->_test_img();
+		$sizes = tevkori_get_srcset_array($id, 'medium');
+
+		// Evaluate that the sizes returned is what we expected.
+		foreach( $sizes as $width => $source ) {
+			$this->assertTrue( $width <= 500 );
+		}
+
+		// Remove test filter
+		remove_filter( 'tevkori_srcset_array', array( $this, '_test_tevkori_srcset_array' ) );
+	}
+
+	/**
+	 * A test filter for tevkori_get_srcset_array() that removes any sources
+	 * that are larger that 500px wide.
+	 */
+	function _test_tevkori_srcset_array( $array ) {
+		foreach ( $array as $size => $file ) {
+			if ( $size > 500 ) {
+				unset( $array[$size] );
+			}
+		}
+		return $array;
+	}
+
 	function test_tevkori_get_sizes_string() {
 		// make an image
 		$id = $this->_test_img();
