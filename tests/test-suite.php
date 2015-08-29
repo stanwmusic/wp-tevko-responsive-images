@@ -200,8 +200,6 @@ class SampleTest extends WP_UnitTestCase {
 		// in which case we don't bother returning a srcset array.
 		$sizes = tevkori_get_srcset_array( $id, 'thumbnail' );
 
-		$image = wp_get_attachment_metadata( $id );
-
 		$this->assertFalse( $sizes );
 	}
 
