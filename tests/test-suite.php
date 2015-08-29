@@ -205,6 +205,41 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertFalse( $sizes );
 	}
 
+	/**
+	 * Test for filtering out leftover sizes after an image is edited.
+	 * @group 155
+	 */
+	function test_tevkori_get_srcset_array_with_edits() {
+		// Make an image.
+		$id = $this->_test_img();
+
+		// For this test we're going to mock metadata changes from an edit.
+		// Start by getting the attachment metadata.
+		$meta = wp_get_attachment_metadata( $id );
+
+		// Mimick hash generation method used in wp_save_image().
+		$hash = 'e' . time() . rand(100, 999);
+
+		// Replace file paths for full and medium sizes with hashed versions.
+		$filename_base = basename( $meta['file'], '.png' );
+		$meta['file'] = str_replace( $filename_base, $filename_base . '-' . $hash, $meta['file'] );
+		$meta['sizes']['medium']['file'] = str_replace( $filename_base, $filename_base . '-' . $hash, $meta['sizes']['medium']['file'] );
+
+		// Save edited metadata.
+		wp_update_attachment_metadata( $id, $meta );
+
+		// Get the edited image and observe that a hash was created.
+		$img_url = wp_get_attachment_url( $id );
+
+		// Calculate a srcset array.
+		$sizes = tevkori_get_srcset_array( $id, 'medium' );
+
+		// Test to confirm all sources in the array include the same edit hash.
+		foreach ( $sizes as $size ) {
+			$this->assertTrue( false !== strpos( $size, $hash ) );
+		}
+	}
+
 	function test_tevkori_get_srcset_array_false() {		// make an image
 		$id = $this->_test_img();
 		$sizes = tevkori_get_srcset_array( 99999, 'foo' );
