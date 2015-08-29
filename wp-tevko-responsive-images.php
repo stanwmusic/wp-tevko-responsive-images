@@ -236,7 +236,7 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 		return false;
 	}
 
-	return $arr;
+	return apply_filters( 'tevkori_srcset_array', $arr, $id, $size );
 }
 
 /**
