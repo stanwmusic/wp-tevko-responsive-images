@@ -156,7 +156,6 @@ class SampleTest extends WP_UnitTestCase {
 
 		$year_month = date('Y/m');
 		$image = wp_get_attachment_metadata( $id );
-		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
 
 		$expected = array(
 			$image['sizes']['medium']['width'] => 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
@@ -181,7 +180,6 @@ class SampleTest extends WP_UnitTestCase {
 		$sizes = tevkori_get_srcset_array( $id, 'medium' );
 
 		$image = wp_get_attachment_metadata( $id );
-		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
 
 		$expected = array(
 			$image['sizes']['medium']['width'] => 'http://example.org/wp-content/uploads/' . $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
