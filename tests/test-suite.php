@@ -238,7 +238,8 @@ class SampleTest extends WP_UnitTestCase {
 		}
 	}
 
-	function test_tevkori_get_srcset_array_false() {		// make an image
+	function test_tevkori_get_srcset_array_false() {
+		// make an image
 		$id = $this->_test_img();
 		$sizes = tevkori_get_srcset_array( 99999, 'foo' );
 
