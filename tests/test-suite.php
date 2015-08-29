@@ -196,6 +196,8 @@ class SampleTest extends WP_UnitTestCase {
 	function test_tevkori_get_srcset_array_single_srcset() {
 		// make an image
 		$id = $this->_test_img();
+		// In our tests, thumbnails would only return a single srcset candidate,
+		// in which case we don't bother returning a srcset array.
 		$sizes = tevkori_get_srcset_array( $id, 'thumbnail' );
 
 		$image = wp_get_attachment_metadata( $id );
