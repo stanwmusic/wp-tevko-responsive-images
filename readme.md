@@ -157,6 +157,8 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 - Added changelog items from 2.3.1 to the readme.txt file
 - Added 'sudo: false' to travis.ci to use new TravisCI infrastructure
 - Removing the srcset and sizes attributes if there is only one source present for the image
+- Use edited image hash to filter out originals from edited images
+- Make output of tevkori_get_srcset_array filterable
 
 **2.3.1**
 
