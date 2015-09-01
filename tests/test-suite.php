@@ -317,4 +317,57 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertSame( $expected, $sizes );
 	}
 
+	/**
+	 * @group 159
+	 */
+	function test_tevkori_filter_attachment_image_attributes() {
+		// Make image.
+		$id = $this->_test_img();
+
+		// Get attachment post data.
+		$attachment = get_post( $id );
+		$image = wp_get_attachment_image_src( $id, 'medium' );
+		list($src, $width, $height) = $image;
+
+		// Create dummy attributes array.
+		$attr = array(
+			'src'    => $src,
+			'width'  => $width,
+			'height' => $height,
+		);
+
+		// Apply filter.
+		$resp_attr = tevkori_filter_attachment_image_attributes( $attr, $attachment, 'medium' );
+
+		// Test output.
+		$this->assertTrue( isset( $resp_attr['srcset'] ) );
+		$this->assertTrue( isset( $resp_attr['sizes'] ) );
+	}
+
+	/**
+	 * @group 159
+	 */
+	function test_tevkori_filter_attachment_image_attributes_thumbnails() {
+		// Make image.
+		$id = $this->_test_img();
+
+		// Get attachment post data.
+		$attachment = get_post( $id );
+		$image = wp_get_attachment_image_src( $id, 'thumbnail' );
+		list($src, $width, $height) = $image;
+
+		// Create dummy attributes array.
+		$attr = array(
+			'src'    => $src,
+			'width'  => $width,
+			'height' => $height,
+		);
+
+		// Apply filter.
+		$resp_attr = tevkori_filter_attachment_image_attributes( $attr, $attachment, 'thumbnail' );
+
+		// Test output.
+		$this->assertFalse( isset( $resp_attr['srcset'] ) );
+		$this->assertFalse( isset( $resp_attr['sizes'] ) );
+	}
 }
