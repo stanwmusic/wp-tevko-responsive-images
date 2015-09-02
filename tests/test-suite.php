@@ -115,6 +115,58 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertSame($expected, $sizes);
 	}
 
+	function test_filter_tevkori_get_sizes_string() {
+		// Add our test filter.
+		add_filter( 'tevkori_image_sizes_args', array( $this, '_test_tevkori_image_sizes_args' ) );
+
+		// Set up our test.
+		$id = $this->_test_img();
+		$sizes = tevkori_get_sizes($id, 'medium');
+
+		// Evaluate that the sizes returned is what we expected.
+		$this->assertSame( $sizes, '100vm');
+
+		remove_filter( 'tevkori_image_sizes_args', array( $this, '_test_tevkori_image_sizes_args' ) );
+	}
+
+	/**
+	 * A simple test filter for tevkori_get_sizes().
+	 */
+	function _test_tevkori_image_sizes_args( $args ) {
+		$args['sizes'] = "100vm";
+		return $args;
+	}
+
+	function test_filter_tevkori_srcset_array() {
+		// Add test filter
+		add_filter( 'tevkori_srcset_array', array( $this, '_test_tevkori_srcset_array' ) );
+
+		// Set up our test.
+		$id = $this->_test_img();
+		$sizes = tevkori_get_srcset_array($id, 'medium');
+
+		// Evaluate that the sizes returned is what we expected.
+		foreach( $sizes as $width => $source ) {
+			$this->assertTrue( $width <= 500 );
+		}
+
+		// Remove test filter
+		remove_filter( 'tevkori_srcset_array', array( $this, '_test_tevkori_srcset_array' ) );
+	}
+
+	/**
+	 * A test filter for tevkori_get_srcset_array() that removes any sources
+	 * that are larger that 500px wide.
+	 */
+	function _test_tevkori_srcset_array( $array ) {
+		foreach ( $array as $size => $file ) {
+			if ( $size > 500 ) {
+				unset( $array[$size] );
+			}
+		}
+		return $array;
+	}
+
 	function test_tevkori_get_sizes_string() {
 		// make an image
 		$id = $this->_test_img();
@@ -134,14 +186,13 @@ class SampleTest extends WP_UnitTestCase {
 
 		$year_month = date('Y/m');
 		$image = wp_get_attachment_metadata( $id );
-		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
 
 		$expected = array(
-			'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+			$image['sizes']['medium']['width'] => 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
 				. $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
-			'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+			$image['sizes']['large']['width'] => 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
 				. $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w',
-			'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
+			$image['width'] => 'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
 		);
 
 		$this->assertSame( $expected, $sizes );
@@ -159,12 +210,11 @@ class SampleTest extends WP_UnitTestCase {
 		$sizes = tevkori_get_srcset_array( $id, 'medium' );
 
 		$image = wp_get_attachment_metadata( $id );
-		$filename_base = substr( $image['file'], 0, strrpos($image['file'], '.png') );
 
 		$expected = array(
-			'http://example.org/wp-content/uploads/' . $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
-			'http://example.org/wp-content/uploads/' . $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w',
-			'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
+			$image['sizes']['medium']['width'] => 'http://example.org/wp-content/uploads/' . $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
+			$image['sizes']['large']['width'] => 'http://example.org/wp-content/uploads/' . $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w',
+			$image['width'] => 'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
 		);
 
 		$this->assertSame( $expected, $sizes );
@@ -173,23 +223,53 @@ class SampleTest extends WP_UnitTestCase {
 		update_option( 'uploads_use_yearmonth_folders', $uploads_use_yearmonth_folders );
 	}
 
-	function test_tevkori_get_srcset_array_thumb() {
+	function test_tevkori_get_srcset_array_single_srcset() {
 		// make an image
 		$id = $this->_test_img();
+		// In our tests, thumbnails would only return a single srcset candidate,
+		// in which case we don't bother returning a srcset array.
 		$sizes = tevkori_get_srcset_array( $id, 'thumbnail' );
 
-		$image = wp_get_attachment_metadata( $id );
-
-		$year_month = date('Y/m');
-		$expected = array(
-			'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
-				. $image['sizes']['thumbnail']['file'] . ' ' . $image['sizes']['thumbnail']['width'] . 'w',
-		);
-
-		$this->assertSame( $expected, $sizes );
+		$this->assertFalse( $sizes );
 	}
 
-	function test_tevkori_get_srcset_array_false() {		// make an image
+	/**
+	 * Test for filtering out leftover sizes after an image is edited.
+	 * @group 155
+	 */
+	function test_tevkori_get_srcset_array_with_edits() {
+		// Make an image.
+		$id = $this->_test_img();
+
+		// For this test we're going to mock metadata changes from an edit.
+		// Start by getting the attachment metadata.
+		$meta = wp_get_attachment_metadata( $id );
+
+		// Mimick hash generation method used in wp_save_image().
+		$hash = 'e' . time() . rand(100, 999);
+
+		// Replace file paths for full and medium sizes with hashed versions.
+		$filename_base = basename( $meta['file'], '.png' );
+		$meta['file'] = str_replace( $filename_base, $filename_base . '-' . $hash, $meta['file'] );
+		$meta['sizes']['medium']['file'] = str_replace( $filename_base, $filename_base . '-' . $hash, $meta['sizes']['medium']['file'] );
+
+		// Save edited metadata.
+		wp_update_attachment_metadata( $id, $meta );
+
+		// Get the edited image and observe that a hash was created.
+		$img_url = wp_get_attachment_url( $id );
+
+		// Calculate a srcset array.
+		$sizes = tevkori_get_srcset_array( $id, 'medium' );
+
+		// Test to confirm all sources in the array include the same edit hash.
+		foreach ( $sizes as $size ) {
+			$this->assertTrue( false !== strpos( $size, $hash ) );
+		}
+	}
+
+	function test_tevkori_get_srcset_array_false() {
+		// make an image
 		$id = $this->_test_img();
 		$sizes = tevkori_get_srcset_array( 99999, 'foo' );
 
