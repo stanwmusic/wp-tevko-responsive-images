@@ -333,44 +333,37 @@ function tevkori_filter_content_images_callback( $matches ) {
 	// Check if srcset attribute is not already present.
 	if ( false !== strpos( 'srcset="', $atts ) ) {
 
-		// Grab the image ID from the core class.
-		preg_match( '/wp-image-([0-9]+)/i', $atts, $id );
+		// Get the url of the original image.
+		preg_match( '/src="(.+?)(\-([0-9]+)x([0-9]+))?(\.[a-zA-Z]{3,4})"/i', $atts, $url_matches );
+		
+		$url = $url_matches[1] . $url_matches[5];
+		
+		// Get the image ID.
+		$id = attachment_url_to_postid( $url );
 
 		if ( $id ) {
-			$id = (int) $id[1];
 
-			// Grab the size name from the core class.
-			preg_match( '/size-([^\s|"]+)\s|"/i', $atts, $size );
-
-			// If a class with size name is present, use it.
-			if ( $size ) {
-				$size = $size[1];
-
-			// Otherwise create an array with the values from the width and height attributes.
-			} else {
-				preg_match( '/width="([0-9]+)"/', $atts, $width );
-				preg_match( '/height="([0-9]+)"/', $atts, $height );
-
+			// Use the width and height from the image url.
+			if ( $url_matches[3] && $url_matches[4] ) {
 				$size = array(
-					(int) $width[1],
-					(int) $height[1]
+					(int) $url_matches[3],
+					(int) $url_matches[4]
 				);
+			} else {
+				$size = 'full';
 			}
 
-			if ( $size ) {
+			// Get the srcset string.
+			$srcset_string = tevkori_get_srcset_string( $id, $size );
 
-				// Get the srcset string.
-				$srcset_string = tevkori_get_srcset_string( $id, $size );
+			if ( $srcset_string ) {
+				$srcset = ' ' . $srcset_string;
 
-				if ( $srcset_string ) {
-					$srcset = ' ' . $srcset_string;
+				// Get the sizes string.
+				$sizes_string = tevkori_get_sizes_string( $id, $size );
 
-					// Get the sizes string.
-					$sizes_string = tevkori_get_sizes_string( $id, $size );
-
-					if ( $sizes_string && ! preg_match( '/sizes="([^"]+)"/i', $atts ) ) {
-						$sizes = ' ' . $sizes_string;
-					}
+				if ( $sizes_string && ! preg_match( '/sizes="([^"]+)"/i', $atts ) ) {
+					$sizes = ' ' . $sizes_string;
 				}
 			}
 		}
