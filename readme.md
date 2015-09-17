@@ -1,7 +1,7 @@
 RICG-responsive-images
 ---
 
-![Build Status](https://travis-ci.org/ResponsiveImagesCG/wp-tevko-responsive-images.svg)
+[![Build Status](https://travis-ci.org/ResponsiveImagesCG/wp-tevko-responsive-images.svg?branch=dev)](https://travis-ci.org/ResponsiveImagesCG/wp-tevko-responsive-images)
 
 Bringing automatic default responsive images to WordPress.
 
