@@ -196,15 +196,8 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	$img_sizes['full'] = array(
 		'width'  => $img_meta['width'],
 		'height' => $img_meta['height'],
-		'file'   => $img_meta['file']
+		'file'   => basename( $img_meta['file'] )
 	);
-
-	if ( strrpos( $img_meta['file'], '/' ) !== false ) {
-		$img_sizes['full']['file'] = substr( $img_meta['file'], strrpos( $img_meta['file'], '/' ) + 1 );
-	}
-
-	// Get the image base url.
-	$img_base_url = substr( $img_url, 0, strrpos( $img_url, '/' ) + 1 );
 
 	// Calculate the image aspect ratio.
 	$img_ratio = $img_height / $img_width;
@@ -228,7 +221,7 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 
 		// If the new ratio differs by less than 0.01, use it.
 		if ( abs( $img_ratio - $img_ratio_compare ) < 0.01 ) {
-			$arr[ $img['width'] ] = $img_base_url . $img['file'] . ' ' . $img['width'] .'w';
+			$arr[ $img['width'] ] = path_join( dirname( $img_url ), $img['file'] ) . ' ' . $img['width'] .'w';
 		}
 	}
 
