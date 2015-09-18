@@ -232,10 +232,6 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 		}
 	}
 
-	if ( count( $arr ) <= 1 ) {
-		return false;
-	}
-
 	/**
 	 * Filter the output of tevkori_get_srcset_array().
 	 *
@@ -260,7 +256,7 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 function tevkori_get_srcset( $id, $size = 'thumbnail' ) {
 	$srcset_array = tevkori_get_srcset_array( $id, $size );
 
-	if ( empty( $srcset_array ) ) {
+	if ( count( $srcset_array ) <= 1 ) {
 		return false;
 	}
 
