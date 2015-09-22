@@ -310,7 +310,12 @@ function tevkori_get_src_sizes( $id, $size = 'thumbnail' ) {
  * @param string $content The raw post content to be filtered.
  */
 function tevkori_filter_content_images( $content ) {
-	preg_match_all( '/src="([^"]*)"/', $content, $matches );
+	
+	// Only match images in our uploads directory.
+	$uploads_dir = wp_upload_dir();
+	$path_to_upload_dir = $uploads_dir['baseurl'];
+	
+	preg_match_all( '|<img (.+?)src="(' . $path_to_upload_dir . '[^"]+)"|i', $content, $matches );
 
 	$urls = array_pop( $matches );
 
