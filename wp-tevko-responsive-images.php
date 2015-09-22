@@ -297,31 +297,130 @@ function tevkori_get_src_sizes( $id, $size = 'thumbnail' ) {
 }
 
 /**
- * Filter for extending image tag to include srcset attribute.
+ * Filters images in post content to add `srcset` and `sizes`.
  *
- * @see images_send_to_editor
- * @return string HTML for image.
+ * @since 3.0
+ *
+ * @param string $content The raw post content to be filtered.
+ * @return string Converted content with `srcset` and `sizes` added to images.
  */
-function tevkori_extend_image_tag( $html, $id, $caption, $title, $align, $url, $size, $alt ) {
-	add_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
+function tevkori_filter_content_images( $content ) {
+	// Only match images in our uploads directory.
+	$uploads_dir = wp_upload_dir();
+	$path_to_upload_dir = $uploads_dir['baseurl'];
 
-	// Get the srcset attribute.
-	$srcset = tevkori_get_srcset_string( $id, $size );
+	$content = preg_replace_callback( '|<img ([^>]+' . $path_to_upload_dir . '[^>]+)[\s?][\/?]>|i', '_tevkori_filter_content_images_callback', $content );
 
-	remove_filter( 'editor_max_image_size', 'tevkori_editor_image_size' );
+	return $content;
+}
+add_filter( 'the_content', 'tevkori_filter_content_images', 5, 1 );
 
-	if ( $srcset ) {
-
-		// Build the data-sizes attribute if sizes were returned.
-		$sizes = tevkori_get_sizes( $id, $size );
-		$sizes = $sizes ? 'data-sizes="' . $sizes . '"' : '';
-
-		$html = preg_replace( '/(src\s*=\s*"(.+?)")/', '$1 ' . $sizes . ' ' . $srcset, $html );
+/**
+ * Private preg_replace callback used in tevkori_filter_content_images()
+ *
+ * @access private
+ * @since 3.0.0
+ */
+function _tevkori_filter_content_images_callback( $image ) {
+	if ( empty( $image ) ) {
+		return false;
 	}
 
-	return $html;
+	list( $image_html, $atts ) = $image;
+	$id = $size = false;
+
+	// Bail early if a `srcset` attribute already exists.
+	if ( false !== strpos( $atts, 'srcset=' ) ) {
+		return $image_html;
+	}
+
+	// Grab ID and size info from core classes.
+	if ( preg_match( '/wp-image-([0-9]+)/i', $atts, $class_id ) ) {
+		(int) $id = $class_id[1];
+	}
+	if ( preg_match( '/size-([^\s|"]+)/i', $atts, $class_size ) ) {
+		$size = $class_size[1];
+	}
+
+	if ( $id && false === $size ) {
+		preg_match( '/width="([0-9]+)"/', $atts, $width );
+		preg_match( '/height="([0-9]+)"/', $atts, $height );
+
+		$size = array(
+			(int) $width[1],
+			(int) $height[1]
+		);
+	}
+
+	/*
+	 * If attempts to get values for `id` and `size` failed, use the
+	 * src to query for matching values in `_wp_attachment_metadata`
+	 */
+	if ( false === $id || false === $size ) {
+		preg_match( '/src="([^"]+)"/', $atts, $url );
+
+		if ( ! $url[1] ) {
+			return $image_html;
+		}
+
+		$image_filename = basename( $url[1] );
+
+		/*
+		 * If we already have an ID, we use it to get the attachment metadata
+		 * using `wp_get_attachment_metadata()`. Otherwise, we'll use the image
+		 * `src` url to query the postmeta table for both the attachement ID and
+		 * metadata, which we'll use later to get the size.
+		 */
+		if ( ! empty( $id ) ) {
+			$meta = wp_get_attachment_metadata( $id );
+		} else {
+			global $wpdb;
+			$meta_object = $wpdb->get_row( $wpdb->prepare(
+				"SELECT `post_id`, `meta_value` FROM $wpdb->postmeta WHERE `meta_key` = '_wp_attachment_metadata' AND `meta_value` LIKE %s",
+				'%' . $image_filename . '%'
+			) );
+
+			// If the query is successful, we can determine the ID and size.
+			if ( is_object( $meta_object ) ) {
+				$id = $meta_object->post_id;
+				// Unserialize the meta_value returned in our query.
+				$meta = maybe_unserialize( $meta_object->meta_value );
+			} else {
+				$meta = false;
+			}
+		}
+
+		/*
+		 * Now that we have the attachment ID and metadata, we can retrieve the
+		 * size by matching the original image's `src` filename with the sizes
+		 * included in the attachment metadata.
+		 */
+		if ( $id && $meta ) {
+			/*
+			 * First, see if the file is the full size image. If not, we loop through
+			 * the itermediate sizes until we find a match.
+			 */
+			if ( $image_filename === basename( $meta['file'] ) ) {
+				$size = 'full';
+			} else {
+				foreach( $meta['sizes'] as $image_size => $image_size_data ) {
+					if ( $image_filename === $image_size_data['file'] ) {
+						$size = $image_size;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	// If we have an ID and size, try for srcset and sizes and update the markup.
+	if ( $id && $size && $srcset = tevkori_get_srcset_string( $id, $size ) ) {
+		$sizes = tevkori_get_sizes_string( $id, $size );
+		$image_html = "<img " . $atts . " " . $srcset . " " . $sizes . " />";
+	};
+
+	return $image_html;
 }
-add_filter( 'image_send_to_editor', 'tevkori_extend_image_tag', 0, 8 );
 
 /**
  * Filter to add srcset and sizes attributes to post thumbnails and gallery images.
@@ -353,28 +452,6 @@ function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size )
 add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 3 );
 
 /**
- * Disable the editor size constraint applied for images in TinyMCE.
- *
- * @return array A width & height array so large it shouldn't constrain reasonable images.
- */
-function tevkori_editor_image_size() {
-	return array( 99999, 99999 );
-}
-
-/**
- * Load admin scripts.
- *
- * @param string $hook Admin page file name.
- */
-function tevkori_load_admin_scripts( $hook ) {
-	if ( $hook == 'post.php' || $hook == 'post-new.php' ) {
-		wp_enqueue_script( 'wp-tevko-responsive-images', plugin_dir_url( __FILE__ ) . 'js/wp-tevko-responsive-images.js', array( 'wp-backbone' ), '2.0.0', true );
-	}
-}
-add_action( 'admin_enqueue_scripts', 'tevkori_load_admin_scripts' );
-
-
-/**
  * Filter for the_content to replace data-size attributes with size attributes.
  *
  * @since 2.2.0
@@ -388,34 +465,3 @@ function tevkori_filter_content_sizes( $content ) {
 	return preg_replace( $images, '${1}sizes="' . $sizes . '"', $content );
 }
 add_filter( 'the_content', 'tevkori_filter_content_sizes' );
-
-
-/**
- * Ajax handler for updating the srcset when an image is changed in the editor.
- *
- * @since 2.3.0
- *
- * @return string A sourcest value.
- */
-function tevkori_ajax_srcset() {
-
-	// Bail early if no post ID is passed.
-	if ( empty( $_POST['postID'] ) ) {
-		return;
-	}
-
-	$postID = (int) $_POST['postID'];
-	if ( ! $postID ) {
-		return;
-	}
-
-	// Grab the image size being passed from the AJAX request.
-	$size = empty( $_POST['size'] ) ? $_POST['size'] : '';
-
-	// Get the srcset value for our image.
-	$srcset = tevkori_get_srcset( $postID, $size );
-
-	// For AJAX requests, we echo the result and then die.
-	wp_send_json( $srcset );
-}
-add_action( 'wp_ajax_tevkori_ajax_srcset', 'tevkori_ajax_srcset' );
