@@ -324,6 +324,16 @@ function _tevkori_filter_content_images_callback( $image ) {
 
 	// Bail early if a `srcset` attribute already exists.
 	if ( false !== strpos( $atts, 'srcset=' ) ) {
+		
+		/*
+		 * Backward compatibility.
+		 *
+		 * Prior to version 2.5 a 'srcset' and 'data-sizes' attribute
+		 * were added to the image while inserting the image in the content.
+		 * We replace the 'data-sizes' attribute by a 'sizes' attribute.
+		 */
+		$image_html = str_replace( ' data-sizes="', ' sizes="', $image_html );
+		
 		return $image_html;
 	}
 
@@ -443,18 +453,3 @@ function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size )
 	return $attr;
 }
 add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 3 );
-
-/**
- * Filter for the_content to replace data-size attributes with size attributes.
- *
- * @since 2.2.0
- *
- * @param string $content The raw post content to be filtered.
- */
-function tevkori_filter_content_sizes( $content ) {
-	$images = '/(<img\s.*?)data-sizes="([^"]+)"/i';
-	$sizes = '${2}';
-
-	return preg_replace( $images, '${1}sizes="' . $sizes . '"', $content );
-}
-add_filter( 'the_content', 'tevkori_filter_content_sizes' );
