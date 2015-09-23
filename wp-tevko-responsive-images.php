@@ -15,10 +15,10 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  */
 
-// Don't load the plugin directly
+// Don't load the plugin directly.
 defined( 'ABSPATH' ) or die( "No script kiddies please!" );
 
-// List includes
+// List includes.
 if ( class_exists( 'Imagick' ) ) {
 	require_once( plugin_dir_path( __FILE__ ) . 'class-respimg.php' );
 	require_once( plugin_dir_path( __FILE__ ) . 'class-wp-image-editor-respimg.php' );
@@ -89,11 +89,11 @@ function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
 	$args = wp_parse_args( $args, $defaults );
 
 	/**
-	* Filter arguments used to create sizes attribute.
+	* Filter arguments used to create 'sizes' attribute.
 	*
 	* @since 2.4.0
 	*
-	* @param array   $args  An array of arguments used to create a sizes attribute.
+	* @param array   $args  An array of arguments used to create a 'sizes' attribute.
 	* @param int     $id    Post ID of the original image.
 	* @param string  $size  Name of the image size being used.
 	*/
@@ -158,6 +158,7 @@ function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
  */
 function tevkori_get_sizes_string( $id, $size = 'thumbnail', $args = null ) {
 	$sizes = tevkori_get_sizes( $id, $size, $args );
+	
 	return $sizes ? 'sizes="' . $sizes . '"' : false;
 }
 
@@ -202,13 +203,17 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	// Calculate the image aspect ratio.
 	$img_ratio = $img_height / $img_width;
 
-	// Images that have been edited in WordPres after being uploaded will
-	// contain a unique hash. We look for that hash and use it later to filter
-	// out images that are left overs from previous renditions.
+	/*
+	 * Images that have been edited in WordPress after being uploaded will
+	 * contain a unique hash. We look for that hash and use it later to filter
+	 * out images that are leftovers from previous renditions.
+	 */
 	$img_edited = preg_match( '/-e[0-9]{13}/', $img_url, $img_edit_hash );
 
-	// Loop through available images and only use images that are resized
-	// versions of the same rendition.
+	/*
+	 * Loop through available images and only use images that are resized
+	 * versions of the same rendition.
+	 */
 	foreach ( $img_sizes as $img ) {
 
 		// Filter out images that are leftovers from previous renditions.
@@ -290,19 +295,24 @@ function tevkori_get_src_sizes( $id, $size = 'thumbnail' ) {
 }
 
 /**
- * Filters images in post content to add `srcset` and `sizes`.
+ * Filters images in post content to add 'srcset' and 'sizes'.
  *
  * @since 3.0
  *
  * @param string $content The raw post content to be filtered.
- * @return string Converted content with `srcset` and `sizes` added to images.
+ * @return string Converted content with 'srcset' and 'sizes' added to images.
  */
 function tevkori_filter_content_images( $content ) {
+	
 	// Only match images in our uploads directory.
 	$uploads_dir = wp_upload_dir();
 	$path_to_upload_dir = $uploads_dir['baseurl'];
 
-	$content = preg_replace_callback( '|<img ([^>]+' . $path_to_upload_dir . '[^>]+)[\s?][\/?]>|i', '_tevkori_filter_content_images_callback', $content );
+	$content = preg_replace_callback(
+		'|<img ([^>]+' . $path_to_upload_dir . '[^>]+)[\s?][\/?]>|i',
+		'_tevkori_filter_content_images_callback',
+		$content
+	);
 
 	return $content;
 }
@@ -322,7 +332,7 @@ function _tevkori_filter_content_images_callback( $image ) {
 	list( $image_html, $atts ) = $image;
 	$id = $size = false;
 
-	// Bail early if a `srcset` attribute already exists.
+	// Bail early if a 'srcset' attribute already exists.
 	if ( false !== strpos( $atts, 'srcset=' ) ) {
 		
 		/*
@@ -356,8 +366,8 @@ function _tevkori_filter_content_images_callback( $image ) {
 	}
 
 	/*
-	 * If attempts to get values for `id` and `size` failed, use the
-	 * src to query for matching values in `_wp_attachment_metadata`
+	 * If attempts to get values for ID and size failed, use the
+	 * src to query for matching values in '_wp_attachment_metadata'.
 	 */
 	if ( false === $id || false === $size ) {
 		preg_match( '/src="([^"]+)"/', $atts, $url );
@@ -370,8 +380,8 @@ function _tevkori_filter_content_images_callback( $image ) {
 
 		/*
 		 * If we already have an ID, we use it to get the attachment metadata
-		 * using `wp_get_attachment_metadata()`. Otherwise, we'll use the image
-		 * `src` url to query the postmeta table for both the attachement ID and
+		 * using 'wp_get_attachment_metadata()'. Otherwise, we'll use the image
+		 * 'src' url to query the postmeta table for both the attachement ID and
 		 * metadata, which we'll use later to get the size.
 		 */
 		if ( ! empty( $id ) ) {
@@ -386,6 +396,7 @@ function _tevkori_filter_content_images_callback( $image ) {
 			// If the query is successful, we can determine the ID and size.
 			if ( is_object( $meta_object ) ) {
 				$id = $meta_object->post_id;
+				
 				// Unserialize the meta_value returned in our query.
 				$meta = maybe_unserialize( $meta_object->meta_value );
 			} else {
@@ -395,13 +406,13 @@ function _tevkori_filter_content_images_callback( $image ) {
 
 		/*
 		 * Now that we have the attachment ID and metadata, we can retrieve the
-		 * size by matching the original image's `src` filename with the sizes
+		 * size by matching the original image's 'src' filename with the sizes
 		 * included in the attachment metadata.
 		 */
 		if ( $id && $meta ) {
 			/*
 			 * First, see if the file is the full size image. If not, we loop through
-			 * the itermediate sizes until we find a match.
+			 * the intermediate sizes until we find a match.
 			 */
 			if ( $image_filename === basename( $meta['file'] ) ) {
 				$size = 'full';
@@ -416,7 +427,7 @@ function _tevkori_filter_content_images_callback( $image ) {
 		}
 	}
 
-	// If we have an ID and size, try for srcset and sizes and update the markup.
+	// If we have an ID and size, try for 'srcset' and 'sizes' and update the markup.
 	if ( $id && $size && $srcset = tevkori_get_srcset_string( $id, $size ) ) {
 		$sizes = tevkori_get_sizes_string( $id, $size );
 		$image_html = "<img " . $atts . " " . $srcset . " " . $sizes . " />";
@@ -426,7 +437,7 @@ function _tevkori_filter_content_images_callback( $image ) {
 }
 
 /**
- * Filter to add srcset and sizes attributes to post thumbnails and gallery images.
+ * Filter to add 'srcset' and 'sizes' attributes to post thumbnails and gallery images.
  *
  * @see wp_get_attachment_image_attributes
  * @return array Attributes for image.
@@ -435,14 +446,14 @@ function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size )
 	if ( ! isset( $attr['srcset'] ) ) {
 		$srcset = tevkori_get_srcset( $attachment->ID, $size );
 
-		// Set the srcset attribute if one was returned.
+		// Set the 'srcset' attribute if one was returned.
 		if ( $srcset ) {
 			$attr['srcset'] = $srcset;
 
 			if ( ! isset( $attr['sizes'] ) ) {
 				$sizes = tevkori_get_sizes( $attachment->ID, $size );
 
-				// Set the sizes attribute if sizes were returned.
+				// Set the 'sizes' attribute if sizes were returned.
 				if ( $sizes ) {
 					$attr['sizes'] = $sizes;
 				}
