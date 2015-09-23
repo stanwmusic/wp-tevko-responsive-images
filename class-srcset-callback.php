@@ -52,7 +52,7 @@ class WP_Ricg_Content_Filter {
 			// Get the url of the original image.
 			preg_match( '/src="(.+?)(\-([0-9]+)x([0-9]+))?(\.[a-zA-Z]{3,4})"/i', $atts, $url_matches );
 		
-			$url = $url_matches[1] . $url_matches[5];
+			$url = $url_matches[1] . array_pop( $url_matches );
 		
 			// Get the image ID.
 			$id = $this->attachments_array[$url];
