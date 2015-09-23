@@ -281,20 +281,6 @@ function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
 }
 
 /**
- * Create a 'srcset' attribute.
- *
- * @deprecated 2.1.0
- * @deprecated Use tevkori_get_srcset_string instead.
- * @see tevkori_get_srcset_string
- *
- * @param int $id Image attachment ID.
- * @return string|bool A full 'srcset' string or false.
- */
-function tevkori_get_src_sizes( $id, $size = 'thumbnail' ) {
-	return tevkori_get_srcset_string( $id, $size );
-}
-
-/**
  * Filters images in post content to add 'srcset' and 'sizes'.
  *
  * @since 3.0
