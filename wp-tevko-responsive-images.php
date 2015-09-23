@@ -363,7 +363,7 @@ function tevkori_filter_attachment_image_attributes( $attr, $attachment, $size )
 add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_image_attributes', 0, 3 );
 
 /**
- * Convert multiple attachement URLs to thier ID.
+ * Convert multiple attachement URLs to their ID.
  *
  * @since 2.5
  *
