@@ -47,7 +47,7 @@ class WP_Ricg_Content_Filter {
 		$sizes = $srcset = '';
 	
 		// Check if srcset attribute is not already present.
-		if ( false !== strpos( 'srcset="', $atts ) ) {
+		if ( false === strpos( 'srcset="', $atts ) ) {
 
 			// Get the url of the original image.
 			preg_match( '/src="(.+?)(\-([0-9]+)x([0-9]+))?(\.[a-zA-Z]{3,4})"/i', $atts, $url_matches );
