@@ -37,7 +37,7 @@ class WP_Ricg_Content_Filter {
 	/**
 	 * Callback function for tevkori_filter_content_images.
 	 *
-	 * @since 3.0
+	 * @since 2.5
 	 *
 	 * @see tevkori_filter_content_images
 	 * @param array $matches Array containing the regular expression matches.

@@ -305,7 +305,7 @@ function tevkori_get_src_sizes( $id, $size = 'thumbnail' ) {
 /**
  * Filter for the_content to add sizes and srcset attributes to images.
  *
- * @since 3.0
+ * @since 2.5
  *
  * @param string $content The raw post content to be filtered.
  */
@@ -365,7 +365,7 @@ add_filter( 'wp_get_attachment_image_attributes', 'tevkori_filter_attachment_ima
 /**
  * Convert multiple attachement URLs to thier ID.
  *
- * @since 3.0
+ * @since 2.5
  *
  * @return array IDs.
  **/
