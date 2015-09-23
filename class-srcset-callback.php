@@ -78,7 +78,7 @@ class WP_Ricg_Content_Filter {
 					// Get the sizes string.
 					$sizes_string = tevkori_get_sizes_string( $id, $size );
 
-					if ( $sizes_string && ! preg_match( '/sizes="([^"]+)"/i', $atts ) ) {
+					if ( $sizes_string && ( false === strpos( $atts, 'sizes="' ) ) ) {
 						$sizes = ' ' . $sizes_string;
 					}
 				}
