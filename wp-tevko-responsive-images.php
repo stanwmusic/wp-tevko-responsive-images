@@ -8,7 +8,7 @@
  * Plugin Name:       RICG Responsive Images
  * Plugin URI:        http://www.smashingmagazine.com/2015/02/24/ricg-responsive-images-for-wordpress/
  * Description:       Bringing automatic default responsive images to wordpress
- * Version:           2.4.0
+ * Version:           2.5.0
  * Author:            The RICG
  * Author URI:        http://responsiveimages.org/
  * License:           GPL-2.0+
@@ -283,7 +283,7 @@ function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
 /**
  * Filters images in post content to add 'srcset' and 'sizes'.
  *
- * @since 3.0
+ * @since 2.5.0
  *
  * @param string $content The raw post content to be filtered.
  * @return string Converted content with 'srcset' and 'sizes' added to images.
@@ -308,7 +308,7 @@ add_filter( 'the_content', 'tevkori_filter_content_images', 5, 1 );
  * Private preg_replace callback used in tevkori_filter_content_images()
  *
  * @access private
- * @since 3.0.0
+ * @since 2.5.0
  */
 function _tevkori_filter_content_images_callback( $image ) {
 	if ( empty( $image ) ) {
