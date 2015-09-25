@@ -342,10 +342,7 @@ function _tevkori_filter_content_images_callback( $image ) {
 	}
 
 	if ( $id && false === $size ) {
-		preg_match( '/ width="([0-9]+)"/', $atts, $width );
-		preg_match( '/ height="([0-9]+)"/', $atts, $height );
-
-		if ( isset( $width[1] ) && isset( $height[1] ) ) {
+		if ( preg_match( '/ width="([0-9]+)"/', $atts, $width ) && preg_match( '/ height="([0-9]+)"/', $atts, $height ) ) {
 			$size = array(
 				(int) $width[1],
 				(int) $height[1]
