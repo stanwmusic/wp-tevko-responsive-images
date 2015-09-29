@@ -158,7 +158,7 @@ function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
  */
 function tevkori_get_sizes_string( $id, $size = 'thumbnail', $args = null ) {
 	$sizes = tevkori_get_sizes( $id, $size, $args );
-	
+
 	return $sizes ? 'sizes="' . $sizes . '"' : false;
 }
 
@@ -289,7 +289,7 @@ function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
  * @return string Converted content with 'srcset' and 'sizes' added to images.
  */
 function tevkori_filter_content_images( $content ) {
-	
+
 	// Only match images in our uploads directory.
 	$uploads_dir = wp_upload_dir();
 	$path_to_upload_dir = $uploads_dir['baseurl'];
@@ -320,7 +320,7 @@ function _tevkori_filter_content_images_callback( $image ) {
 
 	// Bail early if a 'srcset' attribute already exists.
 	if ( false !== strpos( $atts, 'srcset=' ) ) {
-		
+
 		/*
 		 * Backward compatibility.
 		 *
@@ -329,7 +329,7 @@ function _tevkori_filter_content_images_callback( $image ) {
 		 * We replace the 'data-sizes' attribute by a 'sizes' attribute.
 		 */
 		$image_html = str_replace( ' data-sizes="', ' sizes="', $image_html );
-		
+
 		return $image_html;
 	}
 
@@ -351,12 +351,14 @@ function _tevkori_filter_content_images_callback( $image ) {
 	}
 
 	/*
-	 * If attempts to get values for ID and size failed, use the
-	 * src to query for matching values in '_wp_attachment_metadata'.
+	 * If attempts to parse the size value failed, attempt to use the image
+	 * metadata to match the `src` angainst the available sizes for an attachment.
 	 */
-	if ( false === $id || false === $size ) {
+	if ( ! $size && ! empty( $id ) && $meta = wp_get_attachment_metadata( $id ) ) {
+
 		preg_match( '/src="([^"]+)"/', $atts, $url );
 
+		// Sanity check the `src` value and bail early it doesn't exist.
 		if ( ! $url[1] ) {
 			return $image_html;
 		}
@@ -364,52 +366,20 @@ function _tevkori_filter_content_images_callback( $image ) {
 		$image_filename = basename( $url[1] );
 
 		/*
-		 * If we already have an ID, we use it to get the attachment metadata
-		 * using 'wp_get_attachment_metadata()'. Otherwise, we'll use the image
-		 * 'src' url to query the postmeta table for both the attachement ID and
-		 * metadata, which we'll use later to get the size.
+		 * First, see if the file is the full size image. If not, we loop through
+		 * the intermediate sizes until we find a match.
 		 */
-		if ( ! empty( $id ) ) {
-			$meta = wp_get_attachment_metadata( $id );
+		if ( $image_filename === basename( $meta['file'] ) ) {
+			$size = 'full';
 		} else {
-			global $wpdb;
-			$meta_object = $wpdb->get_row( $wpdb->prepare(
-				"SELECT `post_id`, `meta_value` FROM $wpdb->postmeta WHERE `meta_key` = '_wp_attachment_metadata' AND `meta_value` LIKE %s",
-				'%' . $image_filename . '%'
-			) );
-
-			// If the query is successful, we can determine the ID and size.
-			if ( is_object( $meta_object ) ) {
-				$id = $meta_object->post_id;
-				
-				// Unserialize the meta_value returned in our query.
-				$meta = maybe_unserialize( $meta_object->meta_value );
-			} else {
-				$meta = false;
-			}
-		}
-
-		/*
-		 * Now that we have the attachment ID and metadata, we can retrieve the
-		 * size by matching the original image's 'src' filename with the sizes
-		 * included in the attachment metadata.
-		 */
-		if ( $id && $meta ) {
-			/*
-			 * First, see if the file is the full size image. If not, we loop through
-			 * the intermediate sizes until we find a match.
-			 */
-			if ( $image_filename === basename( $meta['file'] ) ) {
-				$size = 'full';
-			} else {
-				foreach( $meta['sizes'] as $image_size => $image_size_data ) {
-					if ( $image_filename === $image_size_data['file'] ) {
-						$size = $image_size;
-						break;
-					}
+			foreach( $meta['sizes'] as $image_size => $image_size_data ) {
+				if ( $image_filename === $image_size_data['file'] ) {
+					$size = $image_size;
+					break;
 				}
 			}
 		}
+
 	}
 
 	// If we have an ID and size, try for 'srcset' and 'sizes' and update the markup.
