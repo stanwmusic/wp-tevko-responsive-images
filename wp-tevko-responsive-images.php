@@ -309,6 +309,15 @@ function tevkori_filter_content_images( $content ) {
 	}
 
 	if ( 0 < count( $ids ) ) {
+		/**
+		 * Warm object caches for use with wp_get_attachment_metadata.
+		 *
+		 * To avoid making a database call for each image, WP_Query is called
+		 * as a single query with the IDs of all images in the post. This warms
+		 * the object cache with the meta information for all images.
+		 *
+		 * This loop is not used directly.
+		 **/
 		$attachments = new WP_Query(array(
 			'post_type'  => 'attachment',
 			'posts_per_page' => '-1',
