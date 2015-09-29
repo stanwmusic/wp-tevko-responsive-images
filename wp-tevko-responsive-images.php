@@ -294,6 +294,29 @@ function tevkori_filter_content_images( $content ) {
 	$uploads_dir = wp_upload_dir();
 	$path_to_upload_dir = $uploads_dir['baseurl'];
 
+	preg_match_all( '|<img ([^>]+' . $path_to_upload_dir . '[^>]+)[\s?][\/?]>|i', $content, $matches );
+
+	$images = $matches[0];
+	$ids = array();
+
+	foreach( $images as $image ) {
+		if ( preg_match( '/wp-image-([0-9]+)/i', $image, $class_id ) ) {
+			(int) $id = $class_id[1];
+			if( $id ) {
+				$ids[] = $id;
+			}
+		}
+	}
+
+	if ( 0 < count( $ids ) ) {
+		$attachments = new WP_Query(array(
+			'post_type'  => 'attachment',
+			'posts_per_page' => '-1',
+			'post_status' => 'inherit',
+			'post__in' => $ids,
+		));
+	}
+
 	$content = preg_replace_callback(
 		'|<img ([^>]+' . $path_to_upload_dir . '[^>]+)[\s?][\/?]>|i',
 		'_tevkori_filter_content_images_callback',
