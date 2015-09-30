@@ -385,12 +385,11 @@ class SampleTest extends WP_UnitTestCase {
 		// Function used to build HTML for the editor.
 		$img = get_image_tag( $id, '', '', '', 'medium' );
 		$img_no_size = str_replace( 'size-', '', $img );
-		$img_no_size_id = str_replace( 'wp-attachment-', '', $img_no_size );
+		$img_no_size_id = str_replace( 'wp-image-', 'id-', $img_no_size );
 
 		// Manually add srcset and sizes to the markup from get_image_tag();
 		$respimg = preg_replace('|<img ([^>]+) />|', '<img $1 ' . $srcset . ' ' . $sizes . ' />', $img);
 		$respimg_no_size = preg_replace('|<img ([^>]+) />|', '<img $1 ' . $srcset . ' ' . $sizes . ' />', $img_no_size);
-		$respimg_no_size_id = preg_replace('|<img ([^>]+) />|', '<img $1 ' . $srcset . ' ' . $sizes . ' />', $img_no_size_id);
 
 		$content = '<p>Welcome to WordPress!  This post contains important information.  After you read it, you can make it private to hide it from visitors but still have the information handy for future reference.</p>
 			<p>First things first:</p>
@@ -421,7 +420,7 @@ class SampleTest extends WP_UnitTestCase {
 			</ul>';
 
 		$content_unfiltered = sprintf( $content, $img, $img_no_size, $img_no_size_id );
-		$content_filtered = sprintf( $content, $respimg, $respimg_no_size, $respimg_no_size_id );
+		$content_filtered = sprintf( $content, $respimg, $respimg_no_size, $img_no_size_id );
 
 		$this->assertSame( $content_filtered, tevkori_filter_content_images( $content_unfiltered ) );
 	}
