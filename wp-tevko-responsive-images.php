@@ -301,7 +301,9 @@ function tevkori_filter_content_images( $content ) {
 	$uploads_dir = wp_upload_dir();
 	$path_to_upload_dir = $uploads_dir['baseurl'];
 
-	preg_match_all( '|<img ([^>]+' . $path_to_upload_dir . '[^>]+)[\s?][\/?]>|i', $content, $matches );
+	// Pattern for matching all images with a `src` from the uploads directory.
+	$pattern = '|<img ([^>]+' . preg_quote( $path_to_upload_dir ) . '[^>]+)>|i';
+	preg_match_all( $pattern, $content, $matches );
 
 	$images = $matches[0];
 	$ids = array();
@@ -334,7 +336,7 @@ function tevkori_filter_content_images( $content ) {
 	}
 
 	$content = preg_replace_callback(
-		'|<img ([^>]+' . $path_to_upload_dir . '[^>]+)[\s?][\/?]>|i',
+		$pattern,
 		'_tevkori_filter_content_images_callback',
 		$content
 	);
@@ -426,6 +428,10 @@ function _tevkori_filter_content_images_callback( $image ) {
 		);
 
 		$sizes = tevkori_get_sizes_string( $id, $size, $args );
+
+		// Strip trailing slashes and whitespaces from the `$atts` string.
+		$atts = trim( rtrim( $atts, '/' ) );
+
 		$image_html = "<img " . $atts . " " . $srcset . " " . $sizes . " />";
 	};
 
