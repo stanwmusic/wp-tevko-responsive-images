@@ -54,11 +54,12 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * @since 2.2.0
  *
  * @param int    $id   Image attachment ID.
- * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
+ * @param string $size Optional. Name of image size. Default value: 'medium'.
  * @param array  $args {
  *     Optional. Arguments to retrieve posts.
  *
  *     @type array|string $sizes An array or string containing of size information.
+ *     @type int          $width A single width value used in the default `sizes` string.
  * }
  * @return string|bool A valid source size value for use in a 'sizes' attribute or false.
  */
@@ -155,11 +156,12 @@ function tevkori_get_sizes( $id, $size = 'medium', $args = null ) {
  * @since 2.2.0
  *
  * @param int    $id   Image attachment ID.
- * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
+ * @param string $size Optional. Name of image size. Default value: 'medium'.
  * @param array  $args {
  *     Optional. Arguments to retrieve posts.
  *
  *     @type array|string $sizes An array or string containing of size information.
+ *     @type int          $width A single width value used in the default `sizes` string.
  * }
  * @return string|bool A valid source size list as a 'sizes' attribute or false.
  */
@@ -173,7 +175,7 @@ function tevkori_get_sizes_string( $id, $size = 'medium', $args = null ) {
  * Get an array of image sources candidates for use in a 'srcset' attribute.
  *
  * @param int    $id   Image attachment ID.
- * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
+ * @param string $size Optional. Name of image size. Default value: 'medium'.
  * @return array|bool  An array of of srcset values or false.
  */
 function tevkori_get_srcset_array( $id, $size = 'medium' ) {
@@ -259,7 +261,7 @@ function tevkori_get_srcset_array( $id, $size = 'medium' ) {
  * @since 2.3.0
  *
  * @param int    $id   Image attachment ID.
- * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
+ * @param string $size Optional. Name of image size. Default value: 'medium'.
  * @return string|bool A 'srcset' value string or false.
  */
 function tevkori_get_srcset( $id, $size = 'medium' ) {
@@ -278,7 +280,7 @@ function tevkori_get_srcset( $id, $size = 'medium' ) {
  * @since 2.1.0
  *
  * @param int    $id   Image attachment ID.
- * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
+ * @param string $size Optional. Name of image size. Default value: 'medium'.
  * @return string|bool A full 'srcset' string or false.
  */
 function tevkori_get_srcset_string( $id, $size = 'medium' ) {
