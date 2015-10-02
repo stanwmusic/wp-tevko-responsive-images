@@ -62,7 +62,7 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * }
  * @return string|bool A valid source size value for use in a 'sizes' attribute or false.
  */
-function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
+function tevkori_get_sizes( $id, $size = 'medium', $args = null ) {
 
 	// Try to get the image width from `$args` before calling `image_downsize()`.
 	if ( is_array( $args ) && ! empty( $args['width'] ) ) {
@@ -163,7 +163,7 @@ function tevkori_get_sizes( $id, $size = 'thumbnail', $args = null ) {
  * }
  * @return string|bool A valid source size list as a 'sizes' attribute or false.
  */
-function tevkori_get_sizes_string( $id, $size = 'thumbnail', $args = null ) {
+function tevkori_get_sizes_string( $id, $size = 'medium', $args = null ) {
 	$sizes = tevkori_get_sizes( $id, $size, $args );
 
 	return $sizes ? 'sizes="' . $sizes . '"' : false;
@@ -176,7 +176,7 @@ function tevkori_get_sizes_string( $id, $size = 'thumbnail', $args = null ) {
  * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
  * @return array|bool  An array of of srcset values or false.
  */
-function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
+function tevkori_get_srcset_array( $id, $size = 'medium' ) {
 	$arr = array();
 
 	// Get the intermediate size.
@@ -262,7 +262,7 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
  * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
  * @return string|bool A 'srcset' value string or false.
  */
-function tevkori_get_srcset( $id, $size = 'thumbnail' ) {
+function tevkori_get_srcset( $id, $size = 'medium' ) {
 	$srcset_array = tevkori_get_srcset_array( $id, $size );
 
 	if ( count( $srcset_array ) <= 1 ) {
@@ -281,7 +281,7 @@ function tevkori_get_srcset( $id, $size = 'thumbnail' ) {
  * @param string $size Optional. Name of image size. Default value: 'thumbnail'.
  * @return string|bool A full 'srcset' string or false.
  */
-function tevkori_get_srcset_string( $id, $size = 'thumbnail' ) {
+function tevkori_get_srcset_string( $id, $size = 'medium' ) {
 	$srcset_value = tevkori_get_srcset( $id, $size );
 
 	if ( empty( $srcset_value ) ) {
