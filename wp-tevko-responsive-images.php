@@ -339,11 +339,15 @@ function tevkori_filter_content_images( $content ) {
 		) );
 	}
 
-	$content = preg_replace_callback(
-		$pattern,
-		'_tevkori_filter_content_images_callback',
-		$content
-	);
+	foreach( $matches[0] as $k => $image ) {
+		$match = array( $image, $matches[1][$k] );
+		$needle = $image;
+		$replacement = _tevkori_filter_content_images_callback( $match );
+		if ( false === $replacement ) {
+			continue;
+		}
+		$content = str_replace( $image, $replacement, $content );
+	}
 
 	return $content;
 }
