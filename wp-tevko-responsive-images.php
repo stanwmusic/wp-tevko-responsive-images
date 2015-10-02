@@ -179,32 +179,36 @@ function tevkori_get_sizes_string( $id, $size = 'thumbnail', $args = null ) {
 function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 	$arr = array();
 
-	// See which image is being returned and bail if none is found.
-	if ( ! $img = wp_get_attachment_image_src( $id, $size ) ) {
+	// Get the intermediate size.
+	$image = image_get_intermediate_size( $id, $size );
+	// Get the post meta.
+	$img_meta = wp_get_attachment_metadata( $id );
+
+	// Extract the height and width from the intermediate or the full size.
+	$img_width = ( $image ) ? $image['width'] : $img_meta['width'];
+	$img_height = ( $image ) ? $image['height'] : $img_meta['height'];
+
+	// Bail early if the width isn't greater that zero.
+	if ( ! $img_width > 0 ) {
 		return false;
 	}
 
-	// Break image data into url, width, and height.
-	list( $img_url, $img_width, $img_height ) = $img;
-
-	// If we have no width to work with, we should bail (see issue #118).
-	if ( 0 == $img_width ) {
-		return false;
+	// Use the url from the intermediate size or build the url from the metadata.
+	if ( ! empty( $image['url'] ) ) {
+		$img_url = $image['url'];
+	} else {
+		$uploads_dir = wp_upload_dir();
+		$img_file = ( $image ) ? path_join( dirname( $img_meta['file'] ) , $image['file'] ) : $img_meta['file'];
+		$img_url = $uploads_dir['baseurl'] . '/' . $img_file;
 	}
 
-	// Get the image meta data and bail if none is found.
-	if ( ! is_array( $img_meta = wp_get_attachment_metadata( $id ) ) ) {
-		return false;
-	}
-
-	// Build an array with image sizes.
 	$img_sizes = $img_meta['sizes'];
 
 	// Add full size to the img_sizes array.
 	$img_sizes['full'] = array(
 		'width'  => $img_meta['width'],
 		'height' => $img_meta['height'],
-		'file'   => basename( $img_meta['file'] )
+		'file'   => wp_basename( $img_meta['file'] )
 	);
 
 	// Calculate the image aspect ratio.
@@ -212,8 +216,8 @@ function tevkori_get_srcset_array( $id, $size = 'thumbnail' ) {
 
 	/*
 	 * Images that have been edited in WordPress after being uploaded will
-	 * contain a unique hash. We look for that hash and use it later to filter
-	 * out images that are leftovers from previous renditions.
+	 * contain a unique hash. Look for that hash and use it later to filter
+	 * out images that are leftovers from previous versions.
 	 */
 	$img_edited = preg_match( '/-e[0-9]{13}/', $img_url, $img_edit_hash );
 
