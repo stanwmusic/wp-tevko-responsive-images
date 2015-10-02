@@ -328,7 +328,7 @@ function tevkori_filter_content_images( $content ) {
 		 * To avoid making a database call for each image, a single query
 		 * warms the object cache with the meta information for all images.
 		 **/
-		update_postmeta_cache( $ids );
+		_prime_post_caches( $ids, false, true );
 	}
 
 	foreach( $matches[0] as $k => $image ) {
