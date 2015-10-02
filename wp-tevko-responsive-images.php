@@ -315,14 +315,14 @@ function tevkori_filter_content_images( $content ) {
 	foreach( $images as $image ) {
 		if ( preg_match( '/wp-image-([0-9]+)/i', $image, $class_id ) ) {
 			(int) $id = $class_id[1];
-			if( $id ) {
+			if ( $id ) {
 				$ids[] = $id;
 			}
 		}
 	}
 
 	if ( 0 < count( $ids ) ) {
-		/**
+		/*
 		 * Warm object caches for use with wp_get_attachment_metadata.
 		 *
 		 * To avoid making a database call for each image, WP_Query is called
@@ -330,13 +330,13 @@ function tevkori_filter_content_images( $content ) {
 		 * the object cache with the meta information for all images.
 		 *
 		 * This loop is not used directly.
-		 **/
-		$attachments = new WP_Query(array(
-			'post_type'  => 'attachment',
+		 */
+		$attachments = new WP_Query( array(
+			'post_type'      => 'attachment',
 			'posts_per_page' => '-1',
-			'post_status' => 'inherit',
-			'post__in' => $ids,
-		));
+			'post_status'    => 'inherit',
+			'post__in'       => $ids,
+		) );
 	}
 
 	$content = preg_replace_callback(
@@ -392,13 +392,13 @@ function _tevkori_filter_content_images_callback( $image ) {
 
 	/*
 	 * If attempts to parse the size value failed, attempt to use the image
-	 * metadata to match the `src` angainst the available sizes for an attachment.
+	 * metadata to match the 'src' angainst the available sizes for an attachment.
 	 */
 	if ( ! $size && ! empty( $id ) && $meta = wp_get_attachment_metadata( $id ) ) {
 
 		preg_match( '/src="([^"]+)"/', $atts, $url );
 
-		// Sanity check the `src` value and bail early it doesn't exist.
+		// Sanity check the 'src' value and bail early it doesn't exist.
 		if ( ! $url[1] ) {
 			return $image_html;
 		}
