@@ -198,6 +198,25 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertSame( $expected, $sizes );
 	}
 
+	function test_tevkori_get_srcset_array_random_size_name() {
+		// make an image
+		$id = $this->_test_img();
+		$sizes = tevkori_get_srcset_array( $id, 'foo' );
+
+		$year_month = date('Y/m');
+		$image = wp_get_attachment_metadata( $id );
+
+		$expected = array(
+			$image['sizes']['medium']['width'] => 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+				. $image['sizes']['medium']['file'] . ' ' . $image['sizes']['medium']['width'] . 'w',
+			$image['sizes']['large']['width'] => 'http://example.org/wp-content/uploads/' . $year_month = date('Y/m') . '/'
+				. $image['sizes']['large']['file'] . ' ' . $image['sizes']['large']['width'] . 'w',
+			$image['width'] => 'http://example.org/wp-content/uploads/' . $image['file'] . ' ' . $image['width'] .'w'
+		);
+
+		$this->assertSame( $expected, $sizes );
+	}
+
 	function test_tevkori_get_srcset_array_no_date_upoads() {
 		// Save the current setting for uploads folders
 		$uploads_use_yearmonth_folders = get_option( 'uploads_use_yearmonth_folders' );
@@ -280,7 +299,7 @@ class SampleTest extends WP_UnitTestCase {
 
 	function test_tevkori_get_srcset_array_no_width() {
 		// Filter image_downsize() output.
-		add_filter( 'image_downsize', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
+		add_filter( 'wp_generate_attachment_metadata', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
 
 		// Make our attachement.
 		$id = $this->_test_img();
@@ -290,14 +309,16 @@ class SampleTest extends WP_UnitTestCase {
 		$this->assertFalse( $srcset );
 
 		// Remove filter.
-		remove_filter( 'image_downsize', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
+		remove_filter( 'wp_generate_attachment_metadata', array( $this, '_test_tevkori_get_srcset_array_no_width_filter' ) );
 	}
 
 	/**
 	 * Helper funtion to filter image_downsize and return zero values for width and height.
 	 */
-	public function _test_tevkori_get_srcset_array_no_width_filter() {
-		return array( 'http://example.org/foo.jpg', 0, 0, false );
+	public function _test_tevkori_get_srcset_array_no_width_filter( $meta ) {
+		$meta['sizes']['medium']['width'] = 0;
+		$meta['sizes']['medium']['height'] = 0;
+		return $meta;
 	}
 
 	function test_tevkori_get_srcset_string() {
