@@ -64,15 +64,14 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * @return string|bool A valid source size value for use in a 'sizes' attribute or false.
  */
 function tevkori_get_sizes( $id, $size = 'medium', $args = null ) {
-
-	// Try to get the image width from `$args` before calling `image_downsize()`.
+	// Try to get the image width from `$args` first.
 	if ( is_array( $args ) && ! empty( $args['width'] ) ) {
 		$img_width = (int) $args['width'];
-	} elseif ( $img = image_downsize( $id, $size ) ) {
-		$img_width = $img[1];
+	} elseif ( $img = image_get_intermediate_size( $id, $size ) ) {
+		list( $img_width, $img_height ) = image_constrain_size_for_editor( $img['width'], $img['height'], $size );
 	}
 
-	// Bail early if ``$image_width` isn't set.
+	// Bail early if `$image_width` isn't set.
 	if ( ! $img_width ) {
 		return false;
 	}
