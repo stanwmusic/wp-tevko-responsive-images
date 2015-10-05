@@ -175,7 +175,7 @@ function tevkori_get_sizes_string( $id, $size = 'medium', $args = null ) {
  *
  * @param int    $id   Image attachment ID.
  * @param string $size Optional. Name of image size. Default value: 'medium'.
- * @return array|bool  An array of of srcset values or false.
+ * @return array|bool  An array of `srcset` values or false.
  */
 function tevkori_get_srcset_array( $id, $size = 'medium' ) {
 	$arr = array();
@@ -350,7 +350,7 @@ function tevkori_img_add_srcset_and_sizes( $image ) {
 		return $image;
 	}
 
-	// Parse id, size, width, and height from the `img` element.
+	// Parse id, size, width, and height from the 'img' element.
 	$id = preg_match( '/wp-image-([0-9]+)/i', $image, $match_id ) ? (int) $match_id[1] : false;
 	$size = preg_match( '/size-([^\s|"]+)/i', $image, $match_size ) ? $match_size[1] : false;
 	$width = preg_match( '/ width="([0-9]+)"/', $image, $match_width ) ? (int) $match_width[1] : false;
@@ -368,10 +368,10 @@ function tevkori_img_add_srcset_and_sizes( $image ) {
 	 * metadata to match the 'src' against the available sizes for an attachment.
 	 */
 	if ( ! $size && ! empty( $id ) && $meta = wp_get_attachment_metadata( $id ) ) {
-		// Parse the image `src` value from the `img` element.
+		// Parse the image 'src' value from the 'img' element.
 		$src = preg_match( '/src="([^"]+)"/', $image, $match_src ) ? $match_src[1] : false;
 
-		// Return early if the `src` value is empty.
+		// Return early if the 'src' value is empty.
 		if ( ! $src ) {
 			return $image;
 		}
