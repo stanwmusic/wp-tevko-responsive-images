@@ -44,7 +44,7 @@ if ( class_exists( 'Imagick' ) ) {
  * Enqueue bundled version of the Picturefill library.
  */
 function tevkori_get_picturefill() {
-	wp_enqueue_script( 'picturefill', plugins_url( 'js/picturefill.min.js', __FILE__ ), array(), '2.3.1', true );
+	wp_enqueue_script( 'picturefill', plugins_url( 'js/picturefill.min.js', __FILE__ ), array(), '3.0.1', true );
 }
 add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
 
@@ -64,15 +64,14 @@ add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
  * @return string|bool A valid source size value for use in a 'sizes' attribute or false.
  */
 function tevkori_get_sizes( $id, $size = 'medium', $args = null ) {
-
-	// Try to get the image width from `$args` before calling `image_downsize()`.
+	// Try to get the image width from `$args` first.
 	if ( is_array( $args ) && ! empty( $args['width'] ) ) {
 		$img_width = (int) $args['width'];
-	} elseif ( $img = image_downsize( $id, $size ) ) {
-		$img_width = $img[1];
+	} elseif ( $img = image_get_intermediate_size( $id, $size ) ) {
+		list( $img_width, $img_height ) = image_constrain_size_for_editor( $img['width'], $img['height'], $size );
 	}
 
-	// Bail early if ``$image_width` isn't set.
+	// Bail early if `$image_width` isn't set.
 	if ( ! $img_width ) {
 		return false;
 	}
@@ -176,7 +175,7 @@ function tevkori_get_sizes_string( $id, $size = 'medium', $args = null ) {
  *
  * @param int    $id   Image attachment ID.
  * @param string $size Optional. Name of image size. Default value: 'medium'.
- * @return array|bool  An array of of srcset values or false.
+ * @return array|bool  An array of `srcset` values or false.
  */
 function tevkori_get_srcset_array( $id, $size = 'medium' ) {
 	$arr = array();
@@ -184,7 +183,9 @@ function tevkori_get_srcset_array( $id, $size = 'medium' ) {
 	// Get the intermediate size.
 	$image = image_get_intermediate_size( $id, $size );
 	// Get the post meta.
-	$img_meta = wp_get_attachment_metadata( $id );
+	if ( ! is_array( $img_meta = wp_get_attachment_metadata( $id ) ) ) {
+		return false;
+	}
 
 	// Extract the height and width from the intermediate or the full size.
 	$img_width = ( $image ) ? $image['width'] : $img_meta['width'];
@@ -302,45 +303,26 @@ function tevkori_get_srcset_string( $id, $size = 'medium' ) {
  * @return string Converted content with 'srcset' and 'sizes' added to images.
  */
 function tevkori_filter_content_images( $content ) {
-
-	// Only match images in our uploads directory.
-	$uploads_dir = wp_upload_dir();
-	$path_to_upload_dir = $uploads_dir['baseurl'];
-
-	// Pattern for matching all images with a `src` from the uploads directory.
-	$pattern = '|<img ([^>]+' . preg_quote( $path_to_upload_dir ) . '[^>]+)>|i';
-	preg_match_all( $pattern, $content, $matches );
-
-	$images = $matches[0];
-	$ids = array();
-
-	foreach( $images as $image ) {
-		if ( preg_match( '/wp-image-([0-9]+)/i', $image, $class_id ) ) {
-			(int) $id = $class_id[1];
-			if ( $id ) {
-				$ids[] = $id;
-			}
-		}
+	if ( ! preg_match_all( '/<img [^>]+ wp-image-([0-9]+)[^>]+>/i', $content, $matches ) ) {
+		return $content;
 	}
 
-	if ( 0 < count( $ids ) ) {
+	$images = $matches[0];
+
+	$attachment_ids = array_unique( $matches[1] );
+
+	if ( 0 < count( $attachment_ids ) ) {
 		/*
 		 * Warm object caches for use with wp_get_attachment_metadata.
 		 *
 		 * To avoid making a database call for each image, a single query
 		 * warms the object cache with the meta information for all images.
-		 **/
-		_prime_post_caches( $ids, false, true );
+		 */
+		_prime_post_caches( $attachment_ids, false, true );
 	}
 
-	foreach( $matches[0] as $k => $image ) {
-		$match = array( $image, $matches[1][$k] );
-		$needle = $image;
-		$replacement = _tevkori_filter_content_images_callback( $match );
-		if ( false === $replacement ) {
-			continue;
-		}
-		$content = str_replace( $image, $replacement, $content );
+	foreach( $images as $image ) {
+		$content = str_replace( $image, tevkori_img_add_srcset_and_sizes( $image ), $content );
 	}
 
 	return $content;
@@ -348,21 +330,16 @@ function tevkori_filter_content_images( $content ) {
 add_filter( 'the_content', 'tevkori_filter_content_images', 5, 1 );
 
 /**
- * Private preg_replace callback used in tevkori_filter_content_images()
+ * Add srcset and sizes to an 'img' element.
  *
- * @access private
- * @since 2.5.0
+ * @since 2.6.0
+ *
+ * @param string $image An HTML 'img' element to be filtered.
+ * @return string Converted 'img' element with 'srcset' and 'sizes' added.
  */
-function _tevkori_filter_content_images_callback( $image ) {
-	if ( empty( $image ) ) {
-		return false;
-	}
-
-	list( $image_html, $atts ) = $image;
-
-	// Bail early if a 'srcset' attribute already exists.
-	if ( false !== strpos( $atts, 'srcset=' ) ) {
-
+function tevkori_img_add_srcset_and_sizes( $image ) {
+	// Return early if a 'srcset' attribute already exists.
+	if ( false !== strpos( $image, ' srcset="' ) ) {
 		/*
 		 * Backward compatibility.
 		 *
@@ -370,43 +347,43 @@ function _tevkori_filter_content_images_callback( $image ) {
 		 * were added to the image while inserting the image in the content.
 		 * We replace the 'data-sizes' attribute by a 'sizes' attribute.
 		 */
-		$image_html = str_replace( ' data-sizes="', ' sizes="', $image_html );
+		$image = str_replace( ' data-sizes="', ' sizes="', $image );
 
-		return $image_html;
+		return $image;
 	}
 
-	// Grab ID and size info from core classes.
-	$id = preg_match( '/wp-image-([0-9]+)/i', $atts, $class_id ) ? (int) $class_id[1] : false;
-	$size = preg_match( '/size-([^\s|"]+)/i', $atts, $class_size ) ? $class_size[1] : false;
-	$width = preg_match( '/ width="([0-9]+)"/', $atts, $atts_width ) ? (int) $atts_width[1] : false;
-	$height = preg_match( '/ height="([0-9]+)"/', $atts, $atts_height ) ? (int) $atts_height[1] : false;
+	// Parse id, size, width, and height from the 'img' element.
+	$id = preg_match( '/wp-image-([0-9]+)/i', $image, $match_id ) ? (int) $match_id[1] : false;
+	$size = preg_match( '/size-([^\s|"]+)/i', $image, $match_size ) ? $match_size[1] : false;
+	$width = preg_match( '/ width="([0-9]+)"/', $image, $match_width ) ? (int) $match_width[1] : false;
+	$height = preg_match( '/ height="([0-9]+)"/', $image, $match_height ) ? (int) $match_height[1] : false;
 
 	if ( $id && false === $size ) {
 		$size = array(
 			$width,
-			$height
+			$height,
 		);
 	}
 
 	/*
 	 * If attempts to parse the size value failed, attempt to use the image
-	 * metadata to match the 'src' angainst the available sizes for an attachment.
+	 * metadata to match the 'src' against the available sizes for an attachment.
 	 */
-	if ( ! $size && ! empty( $id ) && $meta = wp_get_attachment_metadata( $id ) ) {
+	if ( ! $size && ! empty( $id ) && is_array( $meta = wp_get_attachment_metadata( $id ) ) ) {
+		// Parse the image 'src' value from the 'img' element.
+		$src = preg_match( '/src="([^"]+)"/', $image, $match_src ) ? $match_src[1] : false;
 
-		preg_match( '/src="([^"]+)"/', $atts, $url );
-
-		// Sanity check the 'src' value and bail early it doesn't exist.
-		if ( ! $url[1] ) {
-			return $image_html;
+		// Return early if the 'src' value is empty.
+		if ( ! $src ) {
+			return $image;
 		}
-
-		$image_filename = basename( $url[1] );
 
 		/*
 		 * First, see if the file is the full size image. If not, we loop through
-		 * the intermediate sizes until we find a match.
+		 * the intermediate sizes until we find a file that matches.
 		 */
+		$image_filename = wp_basename( $src );
+
 		if ( $image_filename === basename( $meta['file'] ) ) {
 			$size = 'full';
 		} else {
@@ -421,23 +398,26 @@ function _tevkori_filter_content_images_callback( $image ) {
 	}
 
 	// If we have an ID and size, try for 'srcset' and 'sizes' and update the markup.
-	if ( $id && $size && $srcset = tevkori_get_srcset_string( $id, $size ) ) {
+	if ( $id && $size && $srcset = tevkori_get_srcset( $id, $size ) ) {
 
-		// Pass height and width to `tevkori_get_sizes_string()`.
+		/**
+		 * Pass the 'height' and 'width' to 'tevkori_get_sizes()' to avoid
+		 * recalculating the image size.
+		 */
 		$args = array(
-			'width'  => $width,
 			'height' => $height,
+			'width'  => $width,
 		);
+		$sizes = tevkori_get_sizes( $id, $size, $args );
 
-		$sizes = tevkori_get_sizes_string( $id, $size, $args );
+		// Format the srcset and sizes string and escape attributes.
+		$srcset_and_sizes = sprintf( ' srcset="%s" sizes="%s"', esc_attr( $srcset ), esc_attr( $sizes) );
 
-		// Strip trailing slashes and whitespaces from the `$atts` string.
-		$atts = trim( rtrim( $atts, '/' ) );
-
-		$image_html = "<img " . $atts . " " . $srcset . " " . $sizes . " />";
+		// Add srcset and sizes attributes to the image markup.
+		$image = preg_replace( '/<img ([^>]+)[\s?][\/?]>/', '<img $1' . $srcset_and_sizes . ' />', $image );
 	};
 
-	return $image_html;
+	return $image;
 }
 
 /**
