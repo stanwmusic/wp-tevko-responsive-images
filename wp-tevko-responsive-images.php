@@ -44,7 +44,7 @@ if ( class_exists( 'Imagick' ) ) {
  * Enqueue bundled version of the Picturefill library.
  */
 function tevkori_get_picturefill() {
-	wp_enqueue_script( 'picturefill', plugins_url( 'js/picturefill.min.js', __FILE__ ), array(), '2.3.1', true );
+	wp_enqueue_script( 'picturefill', plugins_url( 'js/picturefill.min.js', __FILE__ ), array(), '3.0.1', true );
 }
 add_action( 'wp_enqueue_scripts', 'tevkori_get_picturefill' );
 
