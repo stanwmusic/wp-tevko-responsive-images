@@ -140,10 +140,13 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 
 ## Version
 
-2.6.0
+3.0.0
+- Deprecates core functions that have been merged into WordPress core in 4.4.
+- Adds compatibility shims for sites using the plugin's internal functions and hooks.
 
 ## Changelog
 
+**2.6.0**
 - Turns display filter callback into a general utility function for adding srcset and sizes attributes image HTML.
 - Upgrade to Picturefill 3.0.1
 - Avoids calling image_downsize() when calculating sizes attributes to speed things up.

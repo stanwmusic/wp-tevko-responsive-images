@@ -8,7 +8,7 @@
  * Plugin Name:       RICG Responsive Images
  * Plugin URI:        http://www.smashingmagazine.com/2015/02/24/ricg-responsive-images-for-wordpress/
  * Description:       Bringing automatic default responsive images to wordpress
- * Version:           2.6.0
+ * Version:           3.0.0
  * Author:            The RICG
  * Author URI:        http://responsiveimages.org/
  * License:           GPL-2.0+
