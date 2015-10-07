@@ -4,7 +4,7 @@ Donate link: https://app.etapestry.com/hosted/BoweryResidentsCommittee/OnlineDon
 Tags: Responsive, Images, Responsive Images, SRCSET, Picturefill
 Requires at least: 4.1
 Tested up to: 4.3
-Stable tag: 2.5.2
+Stable tag: 2.6.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.txt
 
@@ -25,6 +25,14 @@ This plugin works by including all available image sizes for each image upload. 
 3. If you'd like to enable the advanced image compression feature, Please see the instructions at https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images/tree/dev#advanced-image-compression
 
 == Changelog ==
+
+= 2.6.0 =
+* Turns display filter callback into a general utility function for adding srcset and sizes attributes image HTML.
+* Upgrade to Picturefill 3.0.1
+* Avoids calling image_downsize() when calculating sizes attributes to speed things up.
+* Fixes a bug when wp_get_attachment_metadata() failed to return an array.
+* Clean up inline docs.
+
 
 = 2.5.2 =
 * Numerous performance and usability improvements
