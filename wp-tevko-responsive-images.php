@@ -6,8 +6,8 @@
  *
  * @wordpress-plugin
  * Plugin Name:       RICG Responsive Images
- * Plugin URI:        http://www.smashingmagazine.com/2015/02/24/ricg-responsive-images-for-wordpress/
- * Description:       Bringing automatic default responsive images to wordpress
+ * Plugin URI:        https://github.com/ResponsiveImagesCG/wp-tevko-responsive-images
+ * Description:       Bringing automatic default responsive images to WordPress
  * Version:           3.0.0
  * Author:            The RICG
  * Author URI:        http://responsiveimages.org/
