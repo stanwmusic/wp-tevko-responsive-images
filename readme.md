@@ -146,20 +146,20 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 
 - Turns display filter callback into a general utility function for adding srcset and sizes attributes image HTML.
 - Upgrade to Picturefill 3.0.1
-- Avoids calling image_downsize() when calculating sizes attributes to speed things up.
-- Fixes a bug when wp_get_attachment_metadata() failed to return an array.
+- Avoids calling `image_downsize()` when calculating sizes attributes to speed things up.
+- Fixes a bug when `wp_get_attachment_metadata()` failed to return an array.
 - Clean up inline docs.
 
 **2.5.2**
 
 - Numerous performance and usability improvements
-- Pass height and width to `tevkori_get_sizes()
+- Pass height and width to `tevkori_get_sizes()`
 - Improved regex in display filter
 - Avoid calling `wp_get_attachment_image_src()` in srcset functions
 - Improved coding standards
 - Removed second regular expression in content filter
 - Improved cache warning function
-- Change default `$size` value for all function to 'medium'
+- Change default `$size` value for all functions to 'medium'
 
 **2.5.1**
 
@@ -171,14 +171,14 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 
 - Responsify all post images by adding `srcset` and `sizes` through a display filter.
 - Improve method used to build paths in `tevkori_get_srcset_array()`
-- Adds linthub config files
+- Added Linthub config files
 - Returns single source arrays in `tevkori_get_srcset_array()`
 - Add tests for PHP7 to our Travis matrix
 - Add test coverage for `tevkori_filter_attachment_image_attributes()`
 
 **2.4.0**
 
-- Added filter for tevkori_get_sizes, with tests
+- Added filter for `tevkori_get_sizes`, with tests
 - Added Composer support
 - Compare aspect ratio in relative values, not absolute values
 - Cleanup of code style and comments added
@@ -193,7 +193,7 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 - Added 'sudo: false' to travis.ci to use new TravisCI infrastructure
 - Removing the srcset and sizes attributes if there is only one source present for the image
 - Use edited image hash to filter out originals from edited images
-- Make output of tevkori_get_srcset_array filterable
+- Make output of `tevkori_get_srcset_array` filterable
 
 **2.3.1**
 
@@ -208,14 +208,14 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 - Added advanced image compression option (available by adding hook to functions.php)
 - Duplicate entires now filtered out from srcset array
 - Upgrade Picturefill to 2.3.1
-- Refactoring plugin JS, including a switch to ajax for updating the srcset value when the image is changed in the editor
-- Now using wp_get_attachment_image_attributes filter for post thumbnails
+- Refactoring plugin JavaScript, including a switch to ajax for updating the srcset value when the image is changed in the editor
+- Now using `wp_get_attachment_image_attributes` filter for post thumbnails
 - Readme and other general code typo fixes
 - Gallery images will now contain a srcset attribute
 
 **2.2.1**
 
-- JS patch for WordPress
+- JavaScript patch for WordPress
 
 **2.2.0**
 
@@ -223,18 +223,17 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 - Updated to Picturefill v2.3.0
 - Extensive documentation included in readme
 - Integrated testing with Travis CLI
-- Check if wp.media exists before running JS
+- Check if wp.media exists before running JavaScript
 - Account for rounding variance when matching ascpect ratios
 
 **2.1.1**
 
-- Adding in wp-tevko-responsive-images.js after file not found to be in wordpress repository
-- Adjusts the aspect ratio check in tevkori_get_srcset_array() to account for rounding variance
+- Adding in wp-tevko-responsive-images.js after file not found to be in WordPress repository
+- Adjusts the aspect ratio check in `tevkori_get_srcset_array()` to account for rounding variance
 
 **2.1.0**
 
-- **This version introduces a breaking change** - there are now two functions. One returns an array of srcset values, and the other returns a string with the ``srcset=".."`` html needed to generate the responsive image. To retrieve the srcset array, use ``tevkori_get_srcset_array( $id, $size )``
-
+- **This version introduces a breaking change**: There are now two functions. One returns an array of srcset values, and the other returns a string with the `srcset=".."` html needed to generate the responsive image. To retrieve the srcset array, use `tevkori_get_srcset_array( $id, $size )`
 - When the image size is changed in the post editor, the srcset values will adjust to match the change.
 
 **2.0.2**
@@ -242,10 +241,12 @@ We use a hook because if you attempt to dequeue a script before it's enqueued, w
 - A bugfix correcting a divide by zero error. Some users may have seen this after upgrading to 2.0.1
 
 **2.0.1**
+
 - Only outputs the default WordPress sizes, giving theme developers the option to extend as needed
 - Added support for featured images
 
 **2.0.0**
+
  - Uses [Picturefill 2.2.0 (Beta)](http://scottjehl.github.io/picturefill/)
  - Scripts are output to footer
  - Image sizes adjusted

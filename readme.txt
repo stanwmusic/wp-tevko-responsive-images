@@ -1,5 +1,5 @@
 === RICG Responsive Images ===
-Contributors: tevko, wilto, joemcgill, jaspermdegroot, chriscoyier, Michael McGinnis, ryelle, drrobotnik, nacin , georgestephanis, helen, wordpressdotorg, Bocoup
+Contributors: tevko, wilto, joemcgill, jaspermdegroot, chriscoyier, Michael McGinnis, ryelle, drrobotnik, nacin, georgestephanis, helen, wordpressdotorg, Bocoup
 Donate link: https://app.etapestry.com/hosted/BoweryResidentsCommittee/OnlineDonation.html
 Tags: Responsive, Images, Responsive Images, SRCSET, Picturefill
 Requires at least: 4.1
@@ -29,20 +29,20 @@ This plugin works by including all available image sizes for each image upload. 
 = 2.6.0 =
 * Turns display filter callback into a general utility function for adding srcset and sizes attributes image HTML.
 * Upgrade to Picturefill 3.0.1
-* Avoids calling image_downsize() when calculating sizes attributes to speed things up.
-* Fixes a bug when wp_get_attachment_metadata() failed to return an array.
+* Avoids calling `image_downsize()` when calculating sizes attributes to speed things up.
+* Fixes a bug when `wp_get_attachment_metadata()` failed to return an array.
 * Clean up inline docs.
 
 
 = 2.5.2 =
 * Numerous performance and usability improvements
-* Pass height and width to `tevkori_get_sizes()
+* Pass height and width to `tevkori_get_sizes()`
 * Improved regex in display filter
 * Avoid calling `wp_get_attachment_image_src()` in srcset functions
 * Improved coding standards
 * Removed second regular expression in content filter
 * Improved cache warning function
-* Change default `$size` value for all function to 'medium'
+* Change default `$size` value for all functions to 'medium'
 
 = 2.5.1 =
 * Query all images in single request before replacing
@@ -53,13 +53,13 @@ This plugin works by including all available image sizes for each image upload. 
 = 2.5.0 =
 * Responsify all post images by adding `srcset` and `sizes` through a display filter.
 * Improve method used to build paths in `tevkori_get_srcset_array()`
-* Adds linthub config files
+* Added Linthub config files
 * Returns single source arrays in `tevkori_get_srcset_array()`
 * Add tests for PHP7 to our Travis matrix
 * Add test coverage for `tevkori_filter_attachment_image_attributes()`
 
 = 2.4.0 =
-* Added filter for tevkori_get_sizes, with tests
+* Added filter for `tevkori_get_sizes`, with tests
 * Added Composer support
 * Compare aspect ratio in relative values, not absolute values
 * Cleanup of code style and comments added
@@ -74,7 +74,7 @@ This plugin works by including all available image sizes for each image upload. 
 * Added 'sudo: false' to travis.ci to use new TravisCI infrastructure
 * Removing the srcset and sizes attributes if there is only one source present for the image
 * Use edited image hash to filter out originals from edited images
-* Make output of tevkori_get_srcset_array filterable
+* Make output of `tevkori_get_srcset_array` filterable
 
 = 2.3.1 =
 * First char no longer stripped from file name if there's no slash
@@ -87,28 +87,28 @@ This plugin works by including all available image sizes for each image upload. 
 * Added advanced image compression option (available by adding hook to functions.php)
 * Duplicate entires now filtered out from srcset array
 * Upgrade Picturefill to 2.3.1
-* Refactoring plugin JS, including a switch to ajax for updating the srcset value when the image is changed in the editor
-* Now using wp_get_attachment_image_attributes filter for post thumbnails
+* Refactoring plugin JavaScript, including a switch to ajax for updating the srcset value when the image is changed in the editor
+* Now using `wp_get_attachment_image_attributes` filter for post thumbnails
 * Readme and other general code typo fixes
 * Gallery images will now contain a srcset attribute
 
 = 2.2.1 =
-* Patch fixing missing javascript error
+* Patch fixing missing JavaScript error
 
 = 2.2.0 =
 * The mandatory sizes attribute is now included on all images
 * Updated to Picturefill v2.3.0
 * Extensive documentation included in readme
 * Integrated testing with Travis CLI
-* Check if wp.media exists before running JS
+* Check if wp.media exists before running JavaScript
 * Account for rounding variance when matching ascpect ratios
 
 = 2.1.1 =
 * Adding in wp-tevko-responsive-images.js after file not found to be in WordPress repository
-* Adjusts the aspect ratio check in tevkori_get_srcset_array() to account for rounding variance
+* Adjusts the aspect ratio check in `tevkori_get_srcset_array()` to account for rounding variance
 
 = 2.1.0 =
-* **This version introduces a breaking change** - there are now two functions. One returns an array of srcset values, and the other returns a string with the `srcset=".."` html needed to generate the responsive image. To retrieve the srcset array, us `tevkori_get_srcset_array( $id, $size )`
+* **This version introduces a breaking change**: There are now two functions. One returns an array of srcset values, and the other returns a string with the `srcset=".."` html needed to generate the responsive image. To retrieve the srcset array, us `tevkori_get_srcset_array( $id, $size )`
 * When the image size is changed in the post editor, the srcset values will adjust to match the change.
 
 = 2.0.2 =
